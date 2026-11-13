@@ -34,6 +34,7 @@
                 android:layout_width="0dp"
                 android:drawableStart="@drawable/ic_menu_news"
                 android:text="@string/mcl_tab_wiki"
+                android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/social_divider"/>
@@ -41,6 +42,7 @@
                 android:id="@+id/social_divider"
                 style="@style/LauncherFragment_Divider"
                 android:layout_marginVertical="@dimen/padding_heavy"
+                android:visibility="gone"
                 app:layout_constraintTop_toTopOf="@id/news_button"
                 app:layout_constraintStart_toStartOf="@id/center_guideline"
                 app:layout_constraintEnd_toEndOf="@id/center_guideline"
@@ -51,6 +53,7 @@
                 android:layout_width="0dp"
                 android:drawableStart="@drawable/ic_discord"
                 android:text="@string/mcl_button_discord"
+                android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/social_divider"/>

@@ -1,99 +1,83 @@
-<h1 align="center">Deepslate Launcher</h1>
+<div align="center">
+  <img src="app_pojavlauncher/src/main/assets/deepslate.png" width="128" height="128" alt="Deepslate Launcher Logo">
+  <h1>Deepslate Launcher</h1>
+  <p><strong>A sleek, high-performance Minecraft: Java Edition launcher for Android.</strong></p>
 
-<p align="center">
-  <img src="app_pojavlauncher/src/main/assets/deepslate.png" width="130" height="130" alt="Deepslate Launcher Logo"><br>
-  <i>A sleek, dark-themed Minecraft: Java Edition launcher for Android based on PojavLauncher & Amethyst, built for freedom, performance, and deep customization.</i>
-</p>
-
-<p align="center">
-  <a href="https://github.com/zacxyonly/Deepslate-Android/actions"><img src="https://github.com/zacxyonly/Deepslate-Android/actions/workflows/android.yml/badge.svg" alt="Build Deepslate Launcher"></a>
-  <img src="https://img.shields.io/badge/Platform-Android-green.svg" alt="Platform Android">
-  <img src="https://img.shields.io/badge/Theme-Dark-18181b.svg" alt="Theme Dark">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-LGPL--3.0-blue.svg" alt="License LGPLv3"></a>
-</p>
-
----
-
-## 🌟 Highlights & Key Features
-
-* 🔓 **Unlocked Local Authentication:** Bebas membuat dan menggunakan akun lokal (offline) langsung dari awal tanpa harus memiliki akun Microsoft resmi terlebih dahulu.
-* 📦 **Unrestricted Downloads:** Pengunduhan game vanilla, library, dan aset Minecraft tetap berfungsi penuh dan lancar pada akun lokal saat terhubung ke internet.
-* 🧩 **Full Modloader & Custom JAR Support:** Mendukung instalasi Forge, Fabric, NeoForge, Quilt, LWJGL3ify, serta custom installer `.jar` langsung dari launcher.
-* 🛡️ **Consistent Signing Keystore:** Seluruh build APK (baik Release maupun Debug) ditandatangani dengan keystore permanen yang konsisten, mencegah error *conflicting signature* saat update aplikasi di Android.
-* 🌒 **Dark Aesthetic:** Didesain dengan tema gelap modern yang nyaman di mata untuk sesi bermain panjang.
-* 🆔 **Valid Offline UUID:** Otomatis menghasilkan UUID standar Minecraft offline berbasis username, menjaga data inventory, achievement, dan kompatibilitas server LAN tetap aman.
-* ⚙️ **Manual & Auto GitHub Actions:** Workflow CI siap pakai dengan opsi build manual (`workflow_dispatch`) untuk meng-compile APK Debug, Release, atau keduanya langsung di GitHub Actions.
+  <p>
+    <a href="https://github.com/zacxyonly/Deepslate-Android/releases/latest"><img src="https://img.shields.io/github/v/release/zacxyonly/Deepslate-Android?color=38bdf8&label=Release" alt="Latest Release"></a>
+    <img src="https://img.shields.io/badge/Platform-Android_8.0+-34d399.svg" alt="Platform Android">
+    <img src="https://img.shields.io/badge/Theme-Deepslate_Dark-1e293b.svg" alt="Theme Dark">
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-LGPL--3.0-60a5fa.svg" alt="License LGPL-3.0"></a>
+  </p>
+</div>
 
 ---
 
-## 📥 Getting Deepslate Launcher
+## Overview
 
-### 1. Download via GitHub Actions (Recommended)
-1. Buka tab **[Actions](https://github.com/zacxyonly/Deepslate-Android/actions)** pada repositori ini.
-2. Pilih workflow run terbaru yang berhasil (tanda centang hijau).
-3. Scroll ke bagian **Artifacts** di bagian bawah halaman untuk mengunduh:
-   * `deepslate-release` (APK Release siap instal)
-   * `deepslate-debug` (APK Debug)
-
-### 2. Manual Build via GitHub Actions
-Kamu bisa men-trigger build secara manual kapan saja:
-1. Buka tab **[Actions](https://github.com/zacxyonly/Deepslate-Android/actions)** -> **Build Deepslate Launcher**.
-2. Klik **Run workflow**.
-3. Pilih tipe build (`all`, `release`, atau `debug`) dan jalankan.
+**Deepslate Launcher** is a modern, fast, and feature-rich Minecraft: Java Edition launcher tailored for Android devices. Featuring a refined dark aesthetic, deep hardware optimization, and cutting-edge renderer support, Deepslate brings desktop Minecraft to your fingertips with smooth frame rates and effortless customization.
 
 ---
 
-## 🔨 Building Locally
+## Features
 
-### Prasyarat
-* Linux / macOS / Windows (WSL2 direkomendasikan)
-* JDK 21 ([Temurin](https://adoptium.net/temurin/releases) atau OpenJDK)
-* Android SDK (compileSdk 37, ndkVersion 27.3.13750724)
-* Pastikan path direktori tidak mengandung spasi.
+- ⚡ **Modern Renderer Pipeline:** Integrated support for MobileGlues, ANGLE, GL4ES, and Vulkan/Zink backends for superior rendering performance and compatibility with modern Minecraft versions (1.20, 1.21, snapshots & beyond).
+- 🌒 **Deepslate Dark Aesthetic:** Custom dark UI designed for low eye strain and premium visual clarity on OLED and LCD screens.
+- 🔓 **Frictionless Authentication:** Instant local (offline) and Microsoft account support with automatic game asset downloading.
+- 🧩 **Comprehensive Modding Support:** One-click integration for Fabric, NeoForge, Forge, Quilt, and custom runtime JAR installers.
+- 🎮 **Tactile Virtual Controls:** Fully customizable on-screen touch controls, mouse emulation, gamepad mapping, and physical keyboard/mouse support.
+- ☕ **Multi-Java Runtimes:** Flexible OpenJDK 8, 17, and 21 runtime switching for legacy and modern modpacks.
 
-### Langkah Build
+---
+
+## Download
+
+Get the latest stable APK from the **[Releases](https://github.com/zacxyonly/Deepslate-Android/releases)** page.
+
+1. Download the latest `Deepslate-Launcher-vX.X.X.apk`.
+2. Install the APK on your Android device (ensure "Install from Unknown Sources" is enabled).
+3. Launch the app, select your preferred Minecraft version or modloader, and jump into the game.
+
+---
+
+## Building from Source
+
+### Prerequisites
+- **JDK 21** ([Eclipse Temurin](https://adoptium.net/temurin/releases) or OpenJDK)
+- **Android SDK** (API Level 36+, NDK 27.x)
+- Linux, macOS, or Windows (WSL2 recommended)
+
+### Build Steps
+
 ```bash
-# Clone beserta seluruh submodule
+# Clone the repository with submodules
 git clone --recursive https://github.com/zacxyonly/Deepslate-Android.git
 cd Deepslate-Android
 
-# Jalankan script persiapan bahasa
+# Prepare language files
 chmod +x ./scripts/*.sh
 ./scripts/languagelist_updater.sh
 
-# Build Release APK
+# Assemble release APK
 ./gradlew :app_pojavlauncher:assembleRelease
-
-# Atau build Debug APK
-./gradlew :app_pojavlauncher:assembleDebug
 ```
-Output APK akan berada di:
-* `app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk`
-* `app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk`
+
+The compiled APK will be located in:
+`app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk`
 
 ---
 
-## 🗺️ Roadmap & Rencana Fitur
-- [x] Bypass pembatasan akun Microsoft (Bebas Local Account).
-- [x] Penandatanganan konsisten dengan Deepslate Keystore.
-- [x] Workflow CI GitHub Actions mandiri dengan manual trigger.
-- [ ] Penggantian icon aplikasi dengan tema Deepslate Dark.
-- [ ] Kustomisasi tampilan UI tema dark / AMOLED.
-- [ ] Optimasi performa render engine & integrasi mod performa.
-- [ ] Fitur kustom HUD dan controller mobile lanjutan.
+## License
+
+Deepslate Launcher is open-source software licensed under the **[GNU Lesser General Public License v3.0 (LGPL-3.0)](LICENSE)**.
 
 ---
 
-## 📜 License
+## Credits & Acknowledgments
 
-Deepslate Launcher dilisensikan di bawah **[GNU Lesser General Public License v3.0 (LGPL-3.0)](LICENSE)**.
-
----
-
-## 🤝 Credits & Acknowledgments
-
-Deepslate Launcher dibangun atas fondasi karya hebat komunitas open-source:
-* **[Amethyst-Android](https://github.com/AngelAuraMC/Amethyst-Android)** oleh tim AngelAuraMC.
-* **[PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)** oleh tim PojavLauncher.
-* **[Boardwalk](https://github.com/zhuowei/Boardwalk)** oleh zhuowei.
-* Seluruh pustaka pihak ketiga: OpenJDK Mobile, GL4ES, MobileGlues, SDL3, ANGLE, dan OpenAL-Soft.
+Deepslate Launcher is made possible by the incredible work of the open-source community:
+- **[PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)**
+- **[Amethyst-Android](https://github.com/AngelAuraMC/Amethyst-Android)**
+- **[MobileGlues](https://github.com/MobileGlues/MobileGlues)**
+- **[Boardwalk](https://github.com/zhuowei/Boardwalk)**
+- All upstream contributors to OpenJDK Mobile, GL4ES, SDL3, ANGLE, and OpenAL-Soft.

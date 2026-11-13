@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Nomor versi / Tag release (contoh: v1.1.7, v1.1.8)'
+        description: 'Release version tag (e.g. v1.0.0, v1.0.1)'
         required: true
-        default: 'v1.1.7'
+        default: 'v1.0.0'
         type: string
       release_type:
-        description: 'Status release di GitHub'
+        description: 'Release type on GitHub'
         required: true
         default: 'release'
         type: choice
@@ -18,7 +18,7 @@ on:
           - prerelease
           - draft
       build_type:
-        description: 'Tipe Build APK'
+        description: 'APK build type'
         required: true
         default: 'release'
         type: choice
@@ -27,12 +27,12 @@ on:
           - debug
           - all
       create_release:
-        description: 'Publikasikan hasil build ke GitHub Release?'
+        description: 'Publish build output to GitHub Release?'
         required: true
         default: true
         type: boolean
       release_title:
-        description: 'Judul Release khusus (opsional, kosongkan untuk default)'
+        description: 'Custom release title (optional, leave empty for default)'
         required: false
         default: ''
         type: string
@@ -88,9 +88,7 @@ jobs:
           gradle :app_pojavlauncher:assembleRelease
           APK_NAME="Deepslate-Launcher-${{ inputs.version }}.apk"
           cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk "out/${APK_NAME}"
-          cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/deepslate-release.apk
           md5sum "out/${APK_NAME}" > "out/${APK_NAME}.md5"
-          md5sum out/deepslate-release.apk > out/deepslate-release.apk.md5
 
       - name: Build Debug APK
         if: ${{ inputs.build_type == 'all' || inputs.build_type == 'debug' }}
@@ -100,16 +98,14 @@ jobs:
           gradle :app_pojavlauncher:assembleDebug
           APK_NAME="Deepslate-Launcher-${{ inputs.version }}-debug.apk"
           cp app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk "out/${APK_NAME}"
-          cp app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/deepslate-debug.apk
           md5sum "out/${APK_NAME}" > "out/${APK_NAME}.md5"
-          md5sum out/deepslate-debug.apk > out/deepslate-debug.apk.md5
 
       - name: Upload Release Artifact
         if: ${{ inputs.build_type == 'all' || inputs.build_type == 'release' }}
         uses: actions/upload-artifact@v4
         with:
           name: deepslate-release
-          path: out/*release*
+          path: out/Deepslate-Launcher-${{ inputs.version }}*
 
       - name: Upload Debug Artifact
         if: ${{ inputs.build_type == 'all' || inputs.build_type == 'debug' }}
@@ -131,16 +127,16 @@ jobs:
 
           echo "## Deepslate Launcher ${TAG_NAME}" > release_notes.md
           echo "" >> release_notes.md
-          echo "### Perubahan & Komit Terbaru:" >> release_notes.md
+          echo "### What's Changed:" >> release_notes.md
           git log -n 10 --pretty=format:"- %s (\`%h\`)" >> release_notes.md
           echo "" >> release_notes.md
           echo "" >> release_notes.md
-          echo "### Berkas Unduhan:" >> release_notes.md
+          echo "### Download Assets:" >> release_notes.md
           for f in out/*.apk; do
             if [ -f "$f" ]; then
               fname=$(basename "$f")
               md5val=$(md5sum "$f" | cut -d' ' -f1)
-              echo "- **${fname}** (Checksum MD5: \`${md5val}\`)" >> release_notes.md
+              echo "- **${fname}** (MD5: \`${md5val}\`)" >> release_notes.md
             fi
           done
 
