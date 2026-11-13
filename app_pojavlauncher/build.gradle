@@ -7,7 +7,7 @@ static def getDate() { return new Date().format('yyyyMMdd') }
 def getVersionName = {
     // Get the last version tag, as well as the short head of the last commit
     String envVersion = System.getenv("VERSION_NAME")
-    String semVer = (envVersion != null && !envVersion.trim().isEmpty()) ? envVersion.trim().replaceFirst(/^v/, "") : "1.0.0"
+    String semVer = (envVersion != null && !envVersion.trim().isEmpty()) ? envVersion.trim().replaceFirst(/^v/, "") : "1.1.0"
     String TAG = ""
     // Used by the fallback for github actions
     String TAG_PART_COMMIT = ""

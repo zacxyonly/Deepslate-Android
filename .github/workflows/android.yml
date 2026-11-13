@@ -6,7 +6,7 @@ on:
       version:
         description: 'Release version tag (e.g. v1.0.0, v1.0.1)'
         required: true
-        default: 'v1.0.0'
+        default: 'v1.1.0'
         type: string
       release_type:
         description: 'Release type on GitHub'
