@@ -1,6 +1,7 @@
 <h1 align="center">Deepslate Launcher</h1>
 
 <p align="center">
+  <img src="app_pojavlauncher/src/main/assets/deepslate.png" width="130" height="130" alt="Deepslate Launcher Logo"><br>
   <i>A sleek, dark-themed Minecraft: Java Edition launcher for Android based on PojavLauncher & Amethyst, built for freedom, performance, and deep customization.</i>
 </p>
 
