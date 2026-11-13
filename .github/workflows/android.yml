@@ -29,7 +29,7 @@ on:
       create_release:
         description: 'Publish build output to GitHub Release?'
         required: true
-        default: true
+        default: false
         type: boolean
       release_title:
         description: 'Custom release title (optional, leave empty for default)'
