@@ -423,4 +423,15 @@
     <string name="preference_touchcontroller_vibrate_length_title">Durasi getaran kontrol sentuh</string>
     <string name="preference_touchcontroller_vibrate_length_description">Atur durasi getaran saat menggunakan kontrol sentuh.</string>
     <string name="error_vanilla_json_corrupt">File JSON bawaan tampaknya rusak. Silakan kirim laporan bug di GitHub atau Discord.</string>
+
+    <string name="main_download_content">Unduh Mod &amp; Resource Pack</string>
+    <string name="hint_search_content">Cari mod, resource pack, shader…</string>
+    <string name="category_mods">Mod</string>
+    <string name="category_resourcepacks">Resource Pack</string>
+    <string name="category_shaders">Shader</string>
+    <string name="category_modpacks">Modpack</string>
+    <string name="filter_modloader">Mod Loader</string>
+    <string name="filter_modloader_all">Semua Loader</string>
+    <string name="filter_auto_profile">Sesuaikan Profil Aktif</string>
+    <string name="filter_target_profile">Tujuan: %1$s</string>
 </resources>

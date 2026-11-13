@@ -58,8 +58,16 @@ public class CurseforgeApi implements ModpackApi{
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("gameId", CURSEFORGE_MINECRAFT_GAME_ID);
-        params.put("classId", searchFilters.isModpack ? CURSEFORGE_MODPACK_CLASS_ID : CURSEFORGE_MOD_CLASS_ID);
-        params.put("searchFilter", searchFilters.name);
+        String pType = searchFilters.projectType != null ? searchFilters.projectType
+                : (searchFilters.isModpack ? SearchFilters.TYPE_MODPACK : SearchFilters.TYPE_MOD);
+        int classId = CURSEFORGE_MOD_CLASS_ID;
+        if (SearchFilters.TYPE_MODPACK.equals(pType)) {
+            classId = CURSEFORGE_MODPACK_CLASS_ID;
+        } else if (SearchFilters.TYPE_RESOURCEPACK.equals(pType)) {
+            classId = 12; // CurseForge Texture Packs
+        }
+        params.put("classId", classId);
+        params.put("searchFilter", searchFilters.name != null ? searchFilters.name : "");
         params.put("sortField", CURSEFORGE_SORT_RELEVANCY);
         params.put("sortOrder", "desc");
         if(searchFilters.mcVersion != null && !searchFilters.mcVersion.isEmpty())
@@ -83,7 +91,7 @@ public class CurseforgeApi implements ModpackApi{
                 continue;
             }
             ModItem modItem = new ModItem(Constants.SOURCE_CURSEFORGE,
-                    searchFilters.isModpack,
+                    pType,
                     dataElement.get("id").getAsString(),
                     dataElement.get("name").getAsString(),
                     dataElement.get("summary").getAsString(),
@@ -171,8 +179,76 @@ public class CurseforgeApi implements ModpackApi{
 
     @Override
     public ModLoader installMod(ModDetail modDetail, int selectedVersion) throws IOException{
-        //TODO considering only modpacks for now
-        return ModpackInstaller.installModpack(modDetail, selectedVersion, this::installCurseforgeZip);
+        if (modDetail.isModpack) {
+            return ModpackInstaller.installModpack(modDetail, selectedVersion, this::installCurseforgeZip);
+        }
+        installSingleContent(modDetail, selectedVersion);
+        return null;
+    }
+
+    private void installSingleContent(ModDetail modDetail, int selectedVersion) throws IOException {
+        net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile currentProfile = net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles.getCurrentProfile();
+        File gameDir = Tools.getGameDirPath(currentProfile);
+
+        File targetDir;
+        String type = modDetail.projectType != null ? modDetail.projectType : SearchFilters.TYPE_MOD;
+        if (SearchFilters.TYPE_RESOURCEPACK.equals(type)) {
+            targetDir = new File(gameDir, "resourcepacks");
+        } else if (SearchFilters.TYPE_SHADER.equals(type)) {
+            targetDir = new File(gameDir, "shaderpacks");
+        } else {
+            targetDir = new File(gameDir, "mods");
+        }
+
+        if (!targetDir.exists()) {
+            targetDir.mkdirs();
+        }
+
+        String downloadUrl = (modDetail.versionUrls != null && selectedVersion < modDetail.versionUrls.length)
+                ? modDetail.versionUrls[selectedVersion] : null;
+        if (downloadUrl == null) {
+            throw new IOException("No download URL found for selected version.");
+        }
+
+        String fileName = null;
+        if (modDetail.fileNames != null && selectedVersion < modDetail.fileNames.length) {
+            fileName = modDetail.fileNames[selectedVersion];
+        }
+        if (fileName == null || fileName.isEmpty()) {
+            try {
+                fileName = Uri.parse(downloadUrl).getLastPathSegment();
+            } catch (Exception ignored) {}
+        }
+        if (fileName == null || fileName.isEmpty()) {
+            String ext = SearchFilters.TYPE_MOD.equals(type) ? ".jar" : ".zip";
+            fileName = modDetail.title.replaceAll("[^a-zA-Z0-9.-]", "_") + ext;
+        }
+
+        File targetFile = new File(targetDir, fileName);
+        byte[] downloadBuffer = new byte[8192];
+        ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.modpack_download_downloading_mods, 0, 100);
+
+        net.kdt.pojavlaunch.utils.DownloadUtils.downloadFileMonitored(downloadUrl, targetFile, downloadBuffer, (bytesRead, totalBytes) -> {
+            if (totalBytes > 0) {
+                int percent = (int) ((bytesRead * 100) / totalBytes);
+                ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, percent, R.string.modpack_download_downloading_mods, percent, 100);
+            }
+        });
+
+        ProgressLayout.clearProgress(ProgressLayout.INSTALL_MODPACK);
+
+        final String finalFileName = fileName;
+        net.kdt.pojavlaunch.lifecycle.ContextExecutor.execute(new net.kdt.pojavlaunch.lifecycle.ContextExecutorTask() {
+            @Override
+            public void executeWithActivity(Activity activity) {
+                android.widget.Toast.makeText(activity, "Installed: " + finalFileName, android.widget.Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void executeWithApplication(android.content.Context context) {
+                android.widget.Toast.makeText(context, "Installed: " + finalFileName, android.widget.Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override

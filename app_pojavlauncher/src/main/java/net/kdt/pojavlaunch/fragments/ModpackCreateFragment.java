@@ -32,7 +32,9 @@ public class ModpackCreateFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         view.findViewById(R.id.button_browse_modpacks).setOnClickListener(v -> {
-            tryInstall(SearchModFragment.class, SearchModFragment.TAG);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("is_modpack", true);
+            Tools.swapFragment(requireActivity(), SearchModFragment.class, SearchModFragment.TAG, bundle);
         });
         view.findViewById(R.id.button_import_modpack).setOnClickListener(v -> {
             Activity launcheractivity = requireActivity();

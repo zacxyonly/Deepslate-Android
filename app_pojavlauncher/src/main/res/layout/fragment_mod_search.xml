@@ -1,66 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_app"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingHorizontal="@dimen/fragment_padding_medium"
-    >
+    android:paddingHorizontal="@dimen/fragment_padding_medium">
 
-
-
-    <!--
-        Cosmetic layout to have a better scrolling separation
-     -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/search_mod_overlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:translationZ="10dp"
         android:background="@drawable/background_overlay"
         android:paddingHorizontal="@dimen/padding_medium"
-        android:paddingVertical="@dimen/padding_medium"
+        android:paddingVertical="@dimen/padding_small"
         android:layout_marginTop="@dimen/fragment_padding_medium"
-        android:layout_marginHorizontal="@dimen/fragment_padding_medium"
+        android:translationZ="10dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-        app:layout_constraintTop_toTopOf="parent"
+        <!-- Top row: Back button, Search input, Filter button -->
+        <ImageButton
+            android:id="@+id/search_mod_back"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:minWidth="@dimen/_38sdp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_arrow_back_white"
+            android:paddingHorizontal="@dimen/padding_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/search_mod_edittext"
+            app:layout_constraintBottom_toBottomOf="@id/search_mod_edittext" />
 
-
-        >
-        <!-- Search text -->
         <EditText
             android:id="@+id/search_mod_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/background_line"
             android:textSize="@dimen/_13ssp"
-            android:translationZ="2dp"
-
             android:ems="10"
-            android:hint="@string/hint_search_modpack"
-            android:inputType="textPersonName"
+            android:hint="@string/hint_search_content"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
             android:paddingHorizontal="@dimen/padding_heavy"
+            android:paddingVertical="@dimen/padding_small"
+            android:layout_marginHorizontal="@dimen/padding_small"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/search_mod_filter"
-            />
+            app:layout_constraintStart_toEndOf="@id/search_mod_back"
+            app:layout_constraintEnd_toStartOf="@id/search_mod_filter" />
 
         <ImageButton
             android:id="@+id/search_mod_filter"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:background="?android:attr/selectableItemBackground"
             android:minWidth="@dimen/_38sdp"
+            android:background="?android:attr/selectableItemBackground"
             android:src="@drawable/ic_filter"
-
-            android:paddingHorizontal="@dimen/padding_medium"
-
+            android:paddingHorizontal="@dimen/padding_small"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/search_mod_edittext"
-            app:layout_constraintBottom_toBottomOf="@id/search_mod_edittext"
+            app:layout_constraintBottom_toBottomOf="@id/search_mod_edittext" />
 
-            />
+        <!-- Category selector bar -->
+        <HorizontalScrollView
+            android:id="@+id/search_category_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:layout_marginTop="@dimen/padding_small"
+            app:layout_constraintTop_toBottomOf="@id/search_mod_edittext">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/category_mods_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_28sdp"
+                    android:background="@drawable/background_line"
+                    android:text="@string/category_mods"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_11ssp"
+                    android:paddingHorizontal="@dimen/padding_medium"
+                    android:layout_marginEnd="@dimen/padding_small" />
+
+                <Button
+                    android:id="@+id/category_resourcepacks_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_28sdp"
+                    android:background="@drawable/background_line"
+                    android:text="@string/category_resourcepacks"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_11ssp"
+                    android:paddingHorizontal="@dimen/padding_medium"
+                    android:layout_marginEnd="@dimen/padding_small" />
+
+                <Button
+                    android:id="@+id/category_shaders_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_28sdp"
+                    android:background="@drawable/background_line"
+                    android:text="@string/category_shaders"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_11ssp"
+                    android:paddingHorizontal="@dimen/padding_medium"
+                    android:layout_marginEnd="@dimen/padding_small" />
+
+                <Button
+                    android:id="@+id/category_modpacks_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_28sdp"
+                    android:background="@drawable/background_line"
+                    android:text="@string/category_modpacks"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_11ssp"
+                    android:paddingHorizontal="@dimen/padding_medium" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Subtitle: Active profile & filter indicator -->
+        <TextView
+            android:id="@+id/search_mod_target_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
+            android:textSize="@dimen/_10ssp"
+            android:textColor="#AAAAAA"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="Target: (Default) • Fabric 1.20.1"
+            app:layout_constraintTop_toBottomOf="@id/search_category_scrollview" />
 
         <ProgressBar
             android:id="@+id/search_mod_progressbar"
@@ -69,16 +144,10 @@
             android:layout_height="wrap_content"
             android:indeterminate="true"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/search_mod_edittext"
-            tools:layout_editor_absoluteX="13dp" />
-
+            android:layout_marginTop="@dimen/padding_small"
+            app:layout_constraintTop_toBottomOf="@id/search_mod_target_info" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_mod_list"
@@ -86,10 +155,8 @@
         android:layout_height="match_parent"
         android:paddingTop="@dimen/_15sdp"
         android:clipToPadding="false"
-
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/search_mod_status_text"

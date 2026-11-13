@@ -25,6 +25,7 @@
 - 🌒 **Deepslate Dark Aesthetic:** Custom dark UI designed for low eye strain and premium visual clarity on OLED and LCD screens.
 - 🔓 **Frictionless Authentication:** Instant local (offline) and Microsoft account support with automatic game asset downloading.
 - 🧩 **Comprehensive Modding Support:** One-click integration for Fabric, NeoForge, Forge, Quilt, and custom runtime JAR installers.
+- 📦 **In-App Content Manager:** Search and download Mods, Resource Packs, Shaders, and Modpacks with automatic installation directly into your active profile.
 - 🎮 **Tactile Virtual Controls:** Fully customizable on-screen touch controls, mouse emulation, gamepad mapping, and physical keyboard/mouse support.
 - ☕ **Multi-Java Runtimes:** Flexible OpenJDK 8, 17, and 21 runtime switching for legacy and modern modpacks.
 
