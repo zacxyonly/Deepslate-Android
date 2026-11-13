@@ -1,15 +1,6 @@
 name: Build Deepslate Launcher
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '**.md'
-      - '.gitignore'
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       build_type:
@@ -65,28 +56,28 @@ jobs:
           mkdir -p out
 
       - name: Build Release APK
-        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'release' }}
+        if: ${{ github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'release' }}
         run: |
           gradle :app_pojavlauncher:assembleRelease
           mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/deepslate-release.apk
           md5sum out/deepslate-release.apk > out/deepslate-release.apk.md5
 
       - name: Build Debug APK
-        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'debug' }}
+        if: ${{ github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'debug' }}
         run: |
           gradle :app_pojavlauncher:assembleDebug
           mv app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/deepslate-debug.apk
           md5sum out/deepslate-debug.apk > out/deepslate-debug.apk.md5
 
       - name: Upload Release APK
-        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'release' }}
+        if: ${{ github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'release' }}
         uses: actions/upload-artifact@v4
         with:
           name: deepslate-release
           path: out/deepslate-release.*
 
       - name: Upload Debug APK
-        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'debug' }}
+        if: ${{ github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'debug' }}
         uses: actions/upload-artifact@v4
         with:
           name: deepslate-debug
