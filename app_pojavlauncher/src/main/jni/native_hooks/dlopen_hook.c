@@ -133,9 +133,17 @@ void *custom_dlsym(void *handle, const char *symbol) {
         if (strstr(redirect->library_name, "libSDL3")) {
             redirect->jni_onload = (JNI_OnLoad_t) result;
             // This outputs in the minecraft logs
-            LOGI("Amethyst-Android: Intercepted dlsym on SDL3 JNI_OnLoad: %p", result);
+            LOGI("Deepslate: Intercepted dlsym on SDL3 JNI_OnLoad: %p", result);
             BYTEHOOK_POP_STACK();
             return get_jni_onload_wrapper(redirect);
+        }
+    }
+    if (result != NULL && symbol != NULL) {
+        void *proxy = sdlDlsymProxy(symbol, result);
+        if (proxy != NULL) {
+            LOGI("SDL_Hook: dlsym proxy for %s", symbol);
+            BYTEHOOK_POP_STACK();
+            return proxy;
         }
     }
     BYTEHOOK_POP_STACK();
