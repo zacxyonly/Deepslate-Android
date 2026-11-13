@@ -228,6 +228,7 @@ public class JREUtils {
             if(LOCAL_RENDERER.equals("opengles_mobileglues")){
                 envMap.put("MG_DIR_PATH", Tools.DIR_DATA + "/MobileGlues");
                 envMap.put("LIBGL_ES", "3");
+                envMap.put("LIBGL_EGL", "libmobileglues.so");
                 envMap.put("POJAVEXEC_EGL","libmobileglues.so");
             }
             /*
@@ -266,6 +267,7 @@ public class JREUtils {
                 Tools.useSFPEW = false;
             }
             if (Tools.useSFPEW) {
+                envMap.put("SFPEW_LAYER", "1");
                 envMap.put("SFPEW_EGL", envMap.get("POJAVEXEC_EGL"));
             }
         }
@@ -345,9 +347,11 @@ public class JREUtils {
             // native gles driver, because providing it ourselves is useless effort.
             // This only matters for Angelica because Mojunk is never using SDL on non-Core
             if (graphicsLib != null && !LOCAL_RENDERER.equals("opengles_system_gles"))
-                Os.setenv("SDL_OPENGL_LIBRARY", graphicsLib, true);
-            if (Os.getenv("POJAVEXEC_EGL") != null && !LOCAL_RENDERER.equals("opengles_system_gles"))
-                Os.setenv("SDL_EGL_LIBRARY", NATIVE_LIB_DIR+"/"+Os.getenv("POJAVEXEC_EGL"), true);
+                Os.setenv("SDL_OPENGL_LIBRARY", NATIVE_LIB_DIR+"/"+graphicsLib, true);
+            if (Os.getenv("POJAVEXEC_EGL") != null && !LOCAL_RENDERER.equals("opengles_system_gles")) {
+                String eglLib = (Tools.useSFPEW) ? "libSimpleFPEWrapper.so" : Os.getenv("POJAVEXEC_EGL");
+                Os.setenv("SDL_EGL_LIBRARY", NATIVE_LIB_DIR+"/"+eglLib, true);
+            }
         } catch (ErrnoException e) {
             Log.wtf("RENDER_LIBRARY", "Failed to load set SDL env vars");
         }

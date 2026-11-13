@@ -20,7 +20,9 @@ import net.kdt.pojavlaunch.utils.JREUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class LauncherPreferences {
     public static final String PREF_KEY_CURRENT_PROFILE = "currentProfile";
@@ -241,13 +243,20 @@ public class LauncherPreferences {
             ForceEnable = 3
         };
          */
-        MGConfigJson.put("enableANGLE", Tools.useANGLE ? 3 : 2);
+        MGConfigJson.put("enableANGLE", Tools.useANGLE ? 3 : 0);
         MGConfigJson.put("enableNoError", Integer.parseInt(DEFAULT_PREF.getString("mg_renderer_setting_errorSetting", "0")));
+
+        // MultiDraw order: default to native first so Adreno driver executes native multidraw without unrolling/corrupting shaders
+        List<String> multidrawOrder = java.util.Arrays.asList(
+            "native", "multiindirect", "multibasevertex", "multiarrays",
+            "indirect", "basevertex", "unroll", "compute"
+        );
+        MGConfigJson.put("multidrawOrder", multidrawOrder);
 
         // These guys are SwitchPreferences so they get special treatment, they need to be converted to ints
         int computeShaderext = DEFAULT_PREF.getBoolean("mg_renderer_computeShaderext", false) ? 1 : 0;
         int angleDepthClearFixMode = DEFAULT_PREF.getBoolean("mg_renderer_setting_angleDepthClearFixMode", false) ? 1 : 0;
-        int timerQueryExt = DEFAULT_PREF.getBoolean("mg_renderer_setting_timerQueryExt", false) ? 1 : 0;
+        int timerQueryExt = DEFAULT_PREF.getBoolean("mg_renderer_setting_timerQueryExt", true) ? 1 : 0;
         int dsaExt = DEFAULT_PREF.getBoolean("mg_renderer_dsaExt", false) ? 1 : 0;
         MGConfigJson.put("enableExtComputeShader", computeShaderext);
         MGConfigJson.put("angleDepthClearFixMode", angleDepthClearFixMode);

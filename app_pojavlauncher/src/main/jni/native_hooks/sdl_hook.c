@@ -397,9 +397,15 @@ static bool proxy_SDL_GL_LoadLibrary(const char *path) {
         }
     }
     if (sLoadedGlHandle == NULL) {
-        const char *egl = getenv("POJAVEXEC_EGL");
-        if (egl != NULL) {
-            sLoadedGlHandle = dlopen(egl, RTLD_LOCAL | RTLD_NOW);
+        const char *gl_lib = getenv("SDL_OPENGL_LIBRARY");
+        if (gl_lib != NULL && gl_lib[0] != '\0') {
+            sLoadedGlHandle = dlopen(gl_lib, RTLD_LOCAL | RTLD_NOW);
+        }
+        if (sLoadedGlHandle == NULL) {
+            const char *egl = getenv("POJAVEXEC_EGL");
+            if (egl != NULL) {
+                sLoadedGlHandle = dlopen(egl, RTLD_LOCAL | RTLD_NOW);
+            }
         }
         if (sLoadedGlHandle == NULL) {
             sLoadedGlHandle = dlopen("libmobileglues.so", RTLD_LOCAL | RTLD_NOW);
