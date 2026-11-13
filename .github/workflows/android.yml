@@ -151,9 +151,12 @@ jobs:
             EXTRA_FLAGS="--draft"
           fi
 
-          # Create or update release
+          # Delete existing release with same tag if it exists to allow re-releasing
+          gh release delete "$TAG_NAME" -y 2>/dev/null || true
+          git push --delete origin "$TAG_NAME" 2>/dev/null || true
+
+          # Create release
           gh release create "$TAG_NAME" out/*.apk out/*.md5 \
             --title "$TITLE" \
             --notes-file release_notes.md \
-            $EXTRA_FLAGS \
-            --clobber
+            $EXTRA_FLAGS
