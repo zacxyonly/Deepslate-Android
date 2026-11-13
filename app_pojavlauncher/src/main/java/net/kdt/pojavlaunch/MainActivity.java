@@ -20,6 +20,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.RectF;
@@ -122,8 +123,15 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
     private QuickSettingSideDialog mQuickSettingSideDialog;
 
     @Override
+    public void setRequestedOrientation(int requestedOrientation) {
+        // SDL dynamically requests orientation based on window dimensions; force lock to sensor landscape
+        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         minecraftProfile = LauncherProfiles.getCurrentProfile();

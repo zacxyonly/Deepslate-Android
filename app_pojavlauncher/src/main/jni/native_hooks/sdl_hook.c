@@ -367,6 +367,7 @@ static bool sdlInitSubSystemPrepare(SDL_InitFlags flags) {
         if (SDL_SetHint_p) SDL_SetHint_p("SDL_OPENGL_FORCE_SRGB_FRAMEBUFFER", "0");
     }
     if (SDL_SetHint_p) SDL_SetHint_p("SDL_ENABLE_SCREEN_KEYBOARD", "1");
+    if (SDL_SetHint_p) SDL_SetHint_p("SDL_ORIENTATIONS", "LandscapeLeft LandscapeRight");
     return true;
 }
 

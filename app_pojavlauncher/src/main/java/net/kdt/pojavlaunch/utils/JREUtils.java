@@ -231,6 +231,7 @@ public class JREUtils {
                 envMap.put("LIBGL_EGL", "libmobileglues.so");
                 envMap.put("POJAVEXEC_EGL","libmobileglues.so");
             }
+            envMap.put("SDL_ORIENTATIONS", "LandscapeLeft LandscapeRight");
             /*
                 Set these to enable ANGLE on GL4ES
                 LIBGL_GLES=libGLESv2_angle.so

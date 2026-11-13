@@ -3,18 +3,42 @@ name: Build Deepslate Launcher
 on:
   workflow_dispatch:
     inputs:
+      version:
+        description: 'Nomor versi / Tag release (contoh: v1.1.7, v1.1.8)'
+        required: true
+        default: 'v1.1.7'
+        type: string
+      release_type:
+        description: 'Status release di GitHub'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - release
+          - prerelease
+          - draft
       build_type:
         description: 'Tipe Build APK'
         required: true
-        default: 'all'
+        default: 'release'
         type: choice
         options:
-          - all
           - release
           - debug
+          - all
+      create_release:
+        description: 'Publikasikan hasil build ke GitHub Release?'
+        required: true
+        default: true
+        type: boolean
+      release_title:
+        description: 'Judul Release khusus (opsional, kosongkan untuk default)'
+        required: false
+        default: ''
+        type: string
 
 permissions:
-  contents: read
+  contents: write
   actions: read
 
 jobs:
@@ -25,6 +49,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           submodules: "recursive"
 
       - name: Set up JDK 21
@@ -56,29 +81,79 @@ jobs:
           mkdir -p out
 
       - name: Build Release APK
-        if: ${{ github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'release' }}
+        if: ${{ inputs.build_type == 'all' || inputs.build_type == 'release' }}
+        env:
+          VERSION_NAME: ${{ inputs.version }}
         run: |
           gradle :app_pojavlauncher:assembleRelease
-          mv app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/deepslate-release.apk
+          APK_NAME="Deepslate-Launcher-${{ inputs.version }}.apk"
+          cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk "out/${APK_NAME}"
+          cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk out/deepslate-release.apk
+          md5sum "out/${APK_NAME}" > "out/${APK_NAME}.md5"
           md5sum out/deepslate-release.apk > out/deepslate-release.apk.md5
 
       - name: Build Debug APK
-        if: ${{ github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'debug' }}
+        if: ${{ inputs.build_type == 'all' || inputs.build_type == 'debug' }}
+        env:
+          VERSION_NAME: ${{ inputs.version }}
         run: |
           gradle :app_pojavlauncher:assembleDebug
-          mv app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/deepslate-debug.apk
+          APK_NAME="Deepslate-Launcher-${{ inputs.version }}-debug.apk"
+          cp app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk "out/${APK_NAME}"
+          cp app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/deepslate-debug.apk
+          md5sum "out/${APK_NAME}" > "out/${APK_NAME}.md5"
           md5sum out/deepslate-debug.apk > out/deepslate-debug.apk.md5
 
-      - name: Upload Release APK
-        if: ${{ github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'release' }}
+      - name: Upload Release Artifact
+        if: ${{ inputs.build_type == 'all' || inputs.build_type == 'release' }}
         uses: actions/upload-artifact@v4
         with:
           name: deepslate-release
-          path: out/deepslate-release.*
+          path: out/*release*
 
-      - name: Upload Debug APK
-        if: ${{ github.event.inputs.build_type == 'all' || github.event.inputs.build_type == 'debug' }}
+      - name: Upload Debug Artifact
+        if: ${{ inputs.build_type == 'all' || inputs.build_type == 'debug' }}
         uses: actions/upload-artifact@v4
         with:
           name: deepslate-debug
-          path: out/deepslate-debug.*
+          path: out/*debug*
+
+      - name: Generate Release Notes & Publish
+        if: ${{ inputs.create_release }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="${{ inputs.version }}"
+          TITLE="${{ inputs.release_title }}"
+          if [ -z "$TITLE" ]; then
+            TITLE="Deepslate Launcher ${TAG_NAME}"
+          fi
+
+          echo "## Deepslate Launcher ${TAG_NAME}" > release_notes.md
+          echo "" >> release_notes.md
+          echo "### Perubahan & Komit Terbaru:" >> release_notes.md
+          git log -n 10 --pretty=format:"- %s (\`%h\`)" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### Berkas Unduhan:" >> release_notes.md
+          for f in out/*.apk; do
+            if [ -f "$f" ]; then
+              fname=$(basename "$f")
+              md5val=$(md5sum "$f" | cut -d' ' -f1)
+              echo "- **${fname}** (Checksum MD5: \`${md5val}\`)" >> release_notes.md
+            fi
+          done
+
+          EXTRA_FLAGS=""
+          if [ "${{ inputs.release_type }}" = "prerelease" ]; then
+            EXTRA_FLAGS="--prerelease"
+          elif [ "${{ inputs.release_type }}" = "draft" ]; then
+            EXTRA_FLAGS="--draft"
+          fi
+
+          # Create or update release
+          gh release create "$TAG_NAME" out/*.apk out/*.md5 \
+            --title "$TITLE" \
+            --notes-file release_notes.md \
+            $EXTRA_FLAGS \
+            --clobber
