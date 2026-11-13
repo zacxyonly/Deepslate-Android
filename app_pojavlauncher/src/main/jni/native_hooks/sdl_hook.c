@@ -25,6 +25,10 @@ DECL_DLSYM(SDL_GetError)
 DECL_DLSYM(SDL_GetWindowFromEvent)
 DECL_DLSYM(SDL_GetWindowFromID)
 DECL_DLSYM(SDL_GL_SetAttribute)
+DECL_DLSYM(SDL_GL_GetAttribute)
+DECL_DLSYM(SDL_GL_LoadLibrary)
+DECL_DLSYM(SDL_GL_GetProcAddress)
+DECL_DLSYM(SDL_GL_UnloadLibrary)
 DECL_DLSYM(SDL_LoadObject)
 DECL_DLSYM(SDL_UnloadObject)
 DECL_DLSYM(SDL_LoadFunction)
@@ -378,6 +382,145 @@ static bool custom_SDL_InitSubSystem_Func(SDL_InitFlags flags) {
     return r;
 }
 
+// --- OpenGL / MobileGlues proc address & library hooks ---
+static void *sLoadedGlHandle = NULL;
+
+static bool proxy_SDL_GL_LoadLibrary(const char *path) {
+    LOGI("SDL_Hook: proxy_SDL_GL_LoadLibrary(%s)", path ? path : "NULL");
+    if (path != NULL && path[0] != '\0') {
+        void *h = dlopen(path, RTLD_LOCAL | RTLD_NOW);
+        if (h != NULL) {
+            sLoadedGlHandle = h;
+            LOGI("SDL_Hook: SDL_GL_LoadLibrary loaded handle %p from %s", h, path);
+        } else {
+            LOGW("SDL_Hook: SDL_GL_LoadLibrary failed to dlopen(%s): %s", path, dlerror());
+        }
+    }
+    if (sLoadedGlHandle == NULL) {
+        const char *egl = getenv("POJAVEXEC_EGL");
+        if (egl != NULL) {
+            sLoadedGlHandle = dlopen(egl, RTLD_LOCAL | RTLD_NOW);
+        }
+        if (sLoadedGlHandle == NULL) {
+            sLoadedGlHandle = dlopen("libmobileglues.so", RTLD_LOCAL | RTLD_NOW);
+        }
+    }
+    return true;
+}
+
+static bool custom_SDL_GL_LoadLibrary_Func(const char *path) {
+    bool r = proxy_SDL_GL_LoadLibrary(path);
+    BYTEHOOK_POP_STACK();
+    return r;
+}
+
+static SDL_FunctionPointer proxy_SDL_GL_GetProcAddress(const char *proc) {
+    if (proc != NULL) {
+        // Priority 1: Check the library explicitly loaded by SDL_GL_LoadLibrary (matches GL.getFunctionProvider())
+        if (sLoadedGlHandle != NULL) {
+            void *sym = dlsym(sLoadedGlHandle, proc);
+            if (sym != NULL) {
+                LOGI("SDL_Hook: SDL_GL_GetProcAddress(%s) -> %p (sLoadedGlHandle)", proc, sym);
+                return (SDL_FunctionPointer) sym;
+            }
+        }
+        // Priority 2: Check MobileGlues directly if handle not set yet
+        void *mg = dlopen("libmobileglues.so", RTLD_NOLOAD);
+        if (mg != NULL) {
+            void *sym = dlsym(mg, proc);
+            if (sym != NULL) {
+                LOGI("SDL_Hook: SDL_GL_GetProcAddress(%s) -> %p (libmobileglues.so)", proc, sym);
+                return (SDL_FunctionPointer) sym;
+            }
+        }
+        // Priority 3: Fallback to eglGetProcAddress
+        void *egl_handle = dlopen("libmobileglues.so", RTLD_NOLOAD);
+        if (egl_handle == NULL) egl_handle = dlopen("libEGL.so", RTLD_NOLOAD);
+        if (egl_handle != NULL) {
+            typedef void *(*eglGetProcAddress_fn)(const char *);
+            eglGetProcAddress_fn eglGpa = (eglGetProcAddress_fn) dlsym(egl_handle, "eglGetProcAddress");
+            if (eglGpa != NULL) {
+                void *egl_sym = eglGpa(proc);
+                if (egl_sym != NULL) {
+                    LOGI("SDL_Hook: SDL_GL_GetProcAddress(%s) -> %p (eglGetProcAddress)", proc, egl_sym);
+                    return (SDL_FunctionPointer) egl_sym;
+                }
+            }
+        }
+    }
+    return NULL;
+}
+
+static SDL_FunctionPointer custom_SDL_GL_GetProcAddress_Func(const char *proc) {
+    SDL_FunctionPointer sym = proxy_SDL_GL_GetProcAddress(proc);
+    BYTEHOOK_POP_STACK();
+    return sym;
+}
+
+static bool proxy_SDL_GL_SetAttribute(SDL_GLAttr attr, int value) {
+    if (attr == SDL_GL_CONTEXT_PROFILE_MASK && sdlGlesCompatEnabled()) {
+        LOGI("SDL_Hook: overriding SDL_GL_CONTEXT_PROFILE_MASK %d -> SDL_GL_CONTEXT_PROFILE_ES (4)", value);
+        value = SDL_GL_CONTEXT_PROFILE_ES;
+        sForcedEsProfile = true;
+    }
+    return true;
+}
+
+static bool custom_SDL_GL_SetAttribute_Func(SDL_GLAttr attr, int value) {
+    if (attr == SDL_GL_CONTEXT_PROFILE_MASK && sdlGlesCompatEnabled()) {
+        LOGI("SDL_Hook: custom overriding SDL_GL_CONTEXT_PROFILE_MASK %d -> SDL_GL_CONTEXT_PROFILE_ES (4)", value);
+        value = SDL_GL_CONTEXT_PROFILE_ES;
+        sForcedEsProfile = true;
+    }
+    bool r = BYTEHOOK_CALL_PREV(custom_SDL_GL_SetAttribute_Func, SDL_GL_SetAttribute_t, attr, value);
+    BYTEHOOK_POP_STACK();
+    return r;
+}
+
+static bool proxy_SDL_GL_GetAttribute(SDL_GLAttr attr, int *value) {
+    if (value != NULL && sdlGlesCompatEnabled()) {
+        if (attr == SDL_GL_CONTEXT_MAJOR_VERSION && *value < 3) {
+            LOGI("SDL_Hook: proxy boosting reported GL major version %d -> 4", *value);
+            *value = 4;
+            return true;
+        } else if (attr == SDL_GL_CONTEXT_MINOR_VERSION && *value < 0) {
+            *value = 0;
+            return true;
+        } else if (attr == SDL_GL_CONTEXT_PROFILE_MASK) {
+            *value = SDL_GL_CONTEXT_PROFILE_ES;
+            return true;
+        }
+    }
+    return true;
+}
+
+static bool custom_SDL_GL_GetAttribute_Func(SDL_GLAttr attr, int *value) {
+    bool r = BYTEHOOK_CALL_PREV(custom_SDL_GL_GetAttribute_Func, SDL_GL_GetAttribute_t, attr, value);
+    BYTEHOOK_POP_STACK();
+    if (value != NULL && sdlGlesCompatEnabled()) {
+        if (attr == SDL_GL_CONTEXT_MAJOR_VERSION && *value < 3) {
+            *value = 4;
+            r = true;
+        } else if (attr == SDL_GL_CONTEXT_MINOR_VERSION && *value < 0) {
+            *value = 0;
+            r = true;
+        } else if (attr == SDL_GL_CONTEXT_PROFILE_MASK) {
+            *value = SDL_GL_CONTEXT_PROFILE_ES;
+            r = true;
+        }
+    }
+    return r;
+}
+
+static void proxy_SDL_GL_UnloadLibrary(void) {
+    LOGI("SDL_Hook: proxy_SDL_GL_UnloadLibrary called");
+}
+
+static void custom_SDL_GL_UnloadLibrary_Func(void) {
+    proxy_SDL_GL_UnloadLibrary();
+    BYTEHOOK_POP_STACK();
+}
+
 /*
  * Tracked handle lists
  */
@@ -401,9 +544,6 @@ static int g_joystick_count = 0;
 static int g_gamepad_count = 0;
 static int g_active_sdl_device_count = 0;
 
-/*
- * Called when the first SDL joystick/gamepad becomes active.
- */
 static void on_sdl_input_active(void)
 {
     LOGI("SDL controller integration active");
@@ -415,9 +555,6 @@ static void on_sdl_input_active(void)
     notifyLauncher(dvm_env, NOTIF_TYPE_SDL, (int[]){ACTION_INIT_CONTROLLER}, 1);
 }
 
-/*
- * Called when the last SDL joystick/gamepad becomes inactive.
- */
 static void on_sdl_input_inactive(void)
 {
     LOGI("SDL controller integration inactive");
@@ -429,9 +566,6 @@ static void on_sdl_input_inactive(void)
     notifyLauncher(dvm_env, NOTIF_TYPE_SDL, (int[]){ACTION_DEINIT_CONTROLLER}, 1);
 }
 
-/*
- * Joystick tracking
- */
 static void track_joystick(SDL_Joystick *joystick)
 {
     joystick_node_t *node;
@@ -506,9 +640,6 @@ static void untrack_joystick(SDL_Joystick *joystick)
         on_sdl_input_inactive();
 }
 
-/*
- * Gamepad tracking
- */
 static void track_gamepad(SDL_Gamepad *gamepad)
 {
     gamepad_node_t *node;
@@ -583,9 +714,6 @@ static void untrack_gamepad(SDL_Gamepad *gamepad)
         on_sdl_input_inactive();
 }
 
-/*
- * Hook functions
- */
 static SDL_Joystick *
 custom_SDL_OpenJoystick_Func(SDL_JoystickID instance_id)
 {
@@ -677,7 +805,7 @@ static SDL_UnloadObject_t realSdlUnloadObject = NULL;
 
 static bool proxy_SDL_InitSubSystem(SDL_InitFlags flags) {
     if (!sdlInitSubSystemPrepare(flags)) return false;
-    bool r = realSdlInitSubSystem(flags);
+    bool r = realSdlInitSubSystem ? realSdlInitSubSystem(flags) : true;
     if (!r) {
         SET_DLSYM_PTR(dlopen("libSDL3.so", RTLD_NOLOAD), SDL_GetError);
         LOGE("SDL_Hook: SDL_InitSubsystem Error: %s", SDL_GetError_p());
@@ -688,7 +816,7 @@ static bool proxy_SDL_InitSubSystem(SDL_InitFlags flags) {
 static SDL_Window *proxy_SDL_CreateWindow(const char *title, int w, int h, SDL_WindowFlags flags) {
     forceEglProfileEs();
     if (shouldReusePrimaryWindow() && sPrimaryWindow != NULL) return reusePrimaryWindow();
-    SDL_Window *window = realSdlCreateWindow(title, w, h, flags);
+    SDL_Window *window = realSdlCreateWindow ? realSdlCreateWindow(title, w, h, flags) : NULL;
     if (window != NULL && shouldReusePrimaryWindow()) {
         sPrimaryWindow = window;
         sPrimaryWindowRefs = 1;
@@ -699,7 +827,7 @@ static SDL_Window *proxy_SDL_CreateWindow(const char *title, int w, int h, SDL_W
 static SDL_Window *proxy_SDL_CreateWindowWithProperties(SDL_PropertiesID props) {
     forceEglProfileEs();
     if (shouldReusePrimaryWindow() && sPrimaryWindow != NULL) return reusePrimaryWindow();
-    SDL_Window *window = realSdlCreateWindowWithProperties(props);
+    SDL_Window *window = realSdlCreateWindowWithProperties ? realSdlCreateWindowWithProperties(props) : NULL;
     if (window != NULL && shouldReusePrimaryWindow()) {
         sPrimaryWindow = window;
         sPrimaryWindowRefs = 1;
@@ -714,7 +842,7 @@ static void proxy_SDL_DestroyWindow(SDL_Window *window) {
 }
 
 static SDL_Window *proxy_SDL_GetWindowFromEvent(const SDL_Event *event) {
-    SDL_Window *window = realSdlGetWindowFromEvent(event);
+    SDL_Window *window = realSdlGetWindowFromEvent ? realSdlGetWindowFromEvent(event) : NULL;
     if (window != NULL) {
         sdlLastEventWindow = window;
     } else if (sdlLastEventWindow != NULL) {
@@ -724,7 +852,7 @@ static SDL_Window *proxy_SDL_GetWindowFromEvent(const SDL_Event *event) {
 }
 
 static SDL_Window *proxy_SDL_GetWindowFromID(SDL_WindowID id) {
-    SDL_Window *window = realSdlGetWindowFromID(id);
+    SDL_Window *window = realSdlGetWindowFromID ? realSdlGetWindowFromID(id) : NULL;
     if (window != NULL) {
         sdlLastEventWindow = window;
     } else if (sdlLastEventWindow != NULL) {
@@ -741,11 +869,12 @@ static SDL_SharedObject *proxy_SDL_LoadObject(const char *path) {
             if (handle != NULL) return (SDL_SharedObject *) handle;
         }
     }
-    return realSdlLoadObject(path);
+    return realSdlLoadObject ? realSdlLoadObject(path) : (SDL_SharedObject *) dlopen(path, RTLD_LOCAL | RTLD_NOW);
 }
 
 static SDL_FunctionPointer proxy_SDL_LoadFunction(SDL_SharedObject *handle, const char *name) {
-    return (SDL_FunctionPointer) injectEglProxy(name, (void *) realSdlLoadFunction(handle, name));
+    void *resolved = realSdlLoadFunction ? (void *) realSdlLoadFunction(handle, name) : dlsym((void *) handle, name);
+    return (SDL_FunctionPointer) injectEglProxy(name, resolved);
 }
 
 static void proxy_SDL_UnloadObject(SDL_SharedObject *handle) {
@@ -754,7 +883,7 @@ static void proxy_SDL_UnloadObject(SDL_SharedObject *handle) {
         void *vulkanHandle = (void *) (uintptr_t) strtoull(vkptr, NULL, 16);
         if ((void *) handle == vulkanHandle) return;
     }
-    realSdlUnloadObject(handle);
+    if (realSdlUnloadObject) realSdlUnloadObject(handle);
 }
 
 void *sdlDlsymProxy(const char *symbol, void *real) {
@@ -794,6 +923,21 @@ void *sdlDlsymProxy(const char *symbol, void *real) {
         if (realSdlUnloadObject == NULL) realSdlUnloadObject = (SDL_UnloadObject_t) real;
         return (void *) proxy_SDL_UnloadObject;
     }
+    if (strcmp(symbol, "SDL_GL_GetProcAddress") == 0) {
+        return (void *) proxy_SDL_GL_GetProcAddress;
+    }
+    if (strcmp(symbol, "SDL_GL_LoadLibrary") == 0) {
+        return (void *) proxy_SDL_GL_LoadLibrary;
+    }
+    if (strcmp(symbol, "SDL_GL_SetAttribute") == 0) {
+        return (void *) proxy_SDL_GL_SetAttribute;
+    }
+    if (strcmp(symbol, "SDL_GL_GetAttribute") == 0) {
+        return (void *) proxy_SDL_GL_GetAttribute;
+    }
+    if (strcmp(symbol, "SDL_GL_UnloadLibrary") == 0) {
+        return (void *) proxy_SDL_GL_UnloadLibrary;
+    }
     return NULL;
 }
 
@@ -812,5 +956,12 @@ void create_sdl_hooks(bytehook_hook_all_t bytehook_hook_all_p) {
     bytehook_stub_t stub_SDL_LoadObject = bytehook_hook_all_p(NULL, "SDL_LoadObject", &custom_SDL_LoadObject_Func, NULL, NULL);
     bytehook_stub_t stub_SDL_UnloadObject = bytehook_hook_all_p(NULL, "SDL_UnloadObject", &custom_SDL_UnloadObject_Func, NULL, NULL);
     bytehook_stub_t stub_SDL_DestroyWindow = bytehook_hook_all_p(NULL, "SDL_DestroyWindow", &custom_SDL_DestroyWindow_Func, NULL, NULL);
+
+    bytehook_stub_t stub_SDL_GL_GetProcAddress = bytehook_hook_all_p(NULL, "SDL_GL_GetProcAddress", &custom_SDL_GL_GetProcAddress_Func, NULL, NULL);
+    bytehook_stub_t stub_SDL_GL_LoadLibrary = bytehook_hook_all_p(NULL, "SDL_GL_LoadLibrary", &custom_SDL_GL_LoadLibrary_Func, NULL, NULL);
+    bytehook_stub_t stub_SDL_GL_SetAttribute = bytehook_hook_all_p(NULL, "SDL_GL_SetAttribute", &custom_SDL_GL_SetAttribute_Func, NULL, NULL);
+    bytehook_stub_t stub_SDL_GL_GetAttribute = bytehook_hook_all_p(NULL, "SDL_GL_GetAttribute", &custom_SDL_GL_GetAttribute_Func, NULL, NULL);
+    bytehook_stub_t stub_SDL_GL_UnloadLibrary = bytehook_hook_all_p(NULL, "SDL_GL_UnloadLibrary", &custom_SDL_GL_UnloadLibrary_Func, NULL, NULL);
+
     LOGI("Successfully initialized SDL hooks, stub: %p\n", stub_SDL_InitSubSystem);
 }
