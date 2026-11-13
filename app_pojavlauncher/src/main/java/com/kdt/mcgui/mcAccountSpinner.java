@@ -43,6 +43,9 @@ import net.kdt.pojavlaunch.extra.ExtraCore;
 import net.kdt.pojavlaunch.extra.ExtraListener;
 import net.kdt.pojavlaunch.value.MinecraftAccount;
 
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -136,6 +139,7 @@ public class mcAccountSpinner extends AppCompatSpinner implements AdapterView.On
         if(value[1].isEmpty()){ // Test mode
             MinecraftAccount account = new MinecraftAccount();
             account.username = value[0];
+            account.profileId = UUID.nameUUIDFromBytes(("OfflinePlayer:" + account.username).getBytes(StandardCharsets.UTF_8)).toString();
             try {
                 account.save();
             }catch (IOException e){
