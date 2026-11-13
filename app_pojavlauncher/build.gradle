@@ -5,54 +5,43 @@ plugins {
 static def getDate() { return new Date().format('yyyyMMdd') }
 
 def getVersionName = {
-    // Get the last version tag, as well as the short head of the last commit
+    // 1. Get version from environment variable (passed by GitHub Actions or local CLI)
     String envVersion = System.getenv("VERSION_NAME")
-    String semVer = (envVersion != null && !envVersion.trim().isEmpty()) ? envVersion.trim().replaceFirst(/^v/, "") : "1.1.0"
-    String TAG = ""
-    // Used by the fallback for github actions
-    String TAG_PART_COMMIT = ""
-    String TAG_STRING
+    String semVer = (envVersion != null && !envVersion.trim().isEmpty()) ? envVersion.trim().replaceFirst(/^v/, "") : null
 
-    try {
-        TAG = providers.exec {
-            commandLine 'git', 'describe', '--tags'
-            ignoreExitValue = true
-        }.getStandardOutput().asText.get()
-    } catch (Exception e) {
-        e.printStackTrace()
-    }
-
-    // Fallback for action builds
-    if (TAG.toString().trim().isEmpty()) {
+    // 2. If not specified in environment, auto-detect from latest git tag matching v*
+    if (semVer == null || semVer.isEmpty()) {
         try {
-            TAG_PART_COMMIT = providers.exec {
-                commandLine 'git', 'describe', '--always', '--tags'
+            String latestTag = providers.exec {
+                commandLine 'git', 'describe', '--tags', '--match', 'v*', '--abbrev=0'
                 ignoreExitValue = true
-            }.getStandardOutput().asText.get()
-        } catch (Exception ignored) {
-        }
+            }.getStandardOutput().asText.get().trim()
+            if (!latestTag.isEmpty()) {
+                semVer = latestTag.replaceFirst(/^v/, "")
+            }
+        } catch (Exception ignored) {}
     }
 
-
-    if(!TAG.isBlank()){
-        TAG_STRING = TAG
-    }else {
-        if(TAG_PART_COMMIT.isBlank()){
-             //Fallback no repo
-            return ("LOCAL-" + "${getDate()}")
-        }else {
-            // Used by github actions
-            TAG_STRING =  'deepslate-' + "${getDate()}" + "-" + TAG_PART_COMMIT.toString().trim()
-        }
-
+    // 3. Fallback default
+    if (semVer == null || semVer.isEmpty()) {
+        semVer = "1.0.0"
     }
+
+    // 4. Get short commit hash
+    String commitHash = ""
+    try {
+        commitHash = providers.exec {
+            commandLine 'git', 'rev-parse', '--short', 'HEAD'
+            ignoreExitValue = true
+        }.getStandardOutput().asText.get().trim()
+    } catch (Exception ignored) {}
+    if (commitHash.isEmpty()) commitHash = "git"
 
     def isRelease = project.gradle.startParameter.taskNames.any { it.toLowerCase().contains('release') }
-    if(!isRelease){
-        return TAG_STRING.trim().replace("-g", "-") + "-" + "debug-" + semVer
-    }else {
-        return TAG_STRING.trim().replace("-g", "-") + "-" + "release-" + semVer
-    }
+    String mode = isRelease ? "release" : "debug"
+
+    // Result e.g. deepslate-20261113-333f2c3-release-1.1.0
+    return "deepslate-" + "${getDate()}" + "-" + commitHash + "-" + mode + "-" + semVer
 }
 
 def getCFApiKey = {

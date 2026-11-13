@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version tag (e.g. v1.0.0, v1.0.1)'
-        required: true
-        default: 'v1.1.0'
+        description: 'Release version tag (e.g. v1.2.0, or leave empty to auto-detect from latest git tag)'
+        required: false
+        default: ''
         type: string
       release_type:
         description: 'Release type on GitHub'
@@ -52,6 +52,28 @@ jobs:
           fetch-depth: 0
           submodules: "recursive"
 
+      - name: Resolve Version
+        id: resolve_ver
+        run: |
+          USER_VER="${{ inputs.version }}"
+          if [ -z "$USER_VER" ]; then
+            LATEST_TAG=$(git describe --tags --match "v*" --abbrev=0 2>/dev/null || true)
+            if [ -z "$LATEST_TAG" ]; then
+              LATEST_TAG="v1.0.0"
+            fi
+            RESOLVED_VER="$LATEST_TAG"
+          else
+            if [[ "$USER_VER" != v* ]]; then
+              RESOLVED_VER="v${USER_VER}"
+            else
+              RESOLVED_VER="$USER_VER"
+            fi
+          fi
+          echo "version=${RESOLVED_VER}" >> $GITHUB_OUTPUT
+          echo "semver=${RESOLVED_VER#v}" >> $GITHUB_OUTPUT
+          echo "Resolved version tag: ${RESOLVED_VER}"
+          echo "Resolved semver: ${RESOLVED_VER#v}"
+
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
@@ -83,20 +105,20 @@ jobs:
       - name: Build Release APK
         if: ${{ inputs.build_type == 'all' || inputs.build_type == 'release' }}
         env:
-          VERSION_NAME: ${{ inputs.version }}
+          VERSION_NAME: ${{ steps.resolve_ver.outputs.semver }}
         run: |
           gradle :app_pojavlauncher:assembleRelease
-          APK_NAME="Deepslate-Launcher-${{ inputs.version }}.apk"
+          APK_NAME="Deepslate-Launcher-${{ steps.resolve_ver.outputs.version }}.apk"
           cp app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk "out/${APK_NAME}"
           md5sum "out/${APK_NAME}" > "out/${APK_NAME}.md5"
 
       - name: Build Debug APK
         if: ${{ inputs.build_type == 'all' || inputs.build_type == 'debug' }}
         env:
-          VERSION_NAME: ${{ inputs.version }}
+          VERSION_NAME: ${{ steps.resolve_ver.outputs.semver }}
         run: |
           gradle :app_pojavlauncher:assembleDebug
-          APK_NAME="Deepslate-Launcher-${{ inputs.version }}-debug.apk"
+          APK_NAME="Deepslate-Launcher-${{ steps.resolve_ver.outputs.version }}-debug.apk"
           cp app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk "out/${APK_NAME}"
           md5sum "out/${APK_NAME}" > "out/${APK_NAME}.md5"
 
@@ -105,7 +127,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: deepslate-release
-          path: out/Deepslate-Launcher-${{ inputs.version }}*
+          path: out/Deepslate-Launcher-${{ steps.resolve_ver.outputs.version }}*
 
       - name: Upload Debug Artifact
         if: ${{ inputs.build_type == 'all' || inputs.build_type == 'debug' }}
@@ -119,7 +141,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG_NAME="${{ inputs.version }}"
+          TAG_NAME="${{ steps.resolve_ver.outputs.version }}"
           TITLE="${{ inputs.release_title }}"
           if [ -z "$TITLE" ]; then
             TITLE="Deepslate Launcher ${TAG_NAME}"
