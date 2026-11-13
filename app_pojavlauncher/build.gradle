@@ -80,16 +80,16 @@ android {
 
     signingConfigs {
         customDebug {
-            storeFile file("debug.keystore")
-            storePassword "android"
-            keyAlias "androiddebugkey"
-            keyPassword "android"
+            storeFile file("deepslate.keystore")
+            storePassword "deepslate"
+            keyAlias "deepslate"
+            keyPassword "deepslate"
         }
         customRelease {
-            storeFile file("aamc_upload.jks")
-            storePassword System.getenv("GPLAY_KEYSTORE_PASSWORD")
-            keyAlias "android_github_release"
-            keyPassword System.getenv("GPLAY_KEYSTORE_PASSWORD")
+            storeFile file("deepslate.keystore")
+            storePassword "deepslate"
+            keyAlias "deepslate"
+            keyPassword "deepslate"
         }
         googlePlayBuild {
             storeFile file("upload.jks")
@@ -122,8 +122,8 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.customDebug
-            resValue "string", "app_name", "Amethyst (Debug)"
-            resValue "string", "app_short_name", "Amethyst (Debug)"
+            resValue "string", "app_name", "Deepslate (Debug)"
+            resValue "string", "app_short_name", "Deepslate (Debug)"
             resValue 'string', 'application_package', 'org.angelauramc.amethyst.debug'
             resValue 'string', 'storageProviderAuthorities', 'org.angelauramc.amethyst.scoped.gamefolder.debug'
             resValue 'string', 'shareProviderAuthority', 'org.angelauramc.amethyst.scoped.controlfolder.debug'
@@ -146,8 +146,8 @@ android {
             // defaultConfig already set
             // multiDexEnabled = true
             // debuggable = true
-            resValue "string", "app_name", "Amethyst"
-            resValue "string", "app_short_name", "Amethyst"
+            resValue "string", "app_name", "Deepslate"
+            resValue "string", "app_short_name", "Deepslate"
             resValue 'string', 'storageProviderAuthorities', 'org.angelauramc.amethyst.scoped.gamefolder'
             resValue 'string', 'application_package', 'org.angelauramc.amethyst'
         }
