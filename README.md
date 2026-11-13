@@ -1,165 +1,98 @@
-<h1 align="center">Angel Aura Amethyst</h1>
+<h1 align="center">Deepslate Launcher</h1>
 
-<img src="https://github.com/AngelAuraMC/Amethyst-Android/blob/v3_openjdk/app_pojavlauncher/src/main/assets/amethyst.png" align="left" width="130" height="130" alt="Amethyst logo">
+<p align="center">
+  <i>A sleek, dark-themed Minecraft: Java Edition launcher for Android based on PojavLauncher & Amethyst, built for freedom, performance, and deep customization.</i>
+</p>
 
-[![Android CI](https://github.com/AngelAuraMC/Amethyst-Android/workflows/Android%20CI/badge.svg)](https://github.com/AngelAuraMC/Amethyst-Android/actions)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/AngelAuraMC/Amethyst-Android)](https://github.com/AngelAuraMC/Amethyst-Android/actions)
-[![Crowdin](https://badges.crowdin.net/pojavlauncher/localized.svg)](https://crowdin.com/project/pojavlauncher)
-[![Discord](https://img.shields.io/discord/724163890803638273.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/5ptqkyZxEy)
+<p align="center">
+  <a href="https://github.com/zacxyonly/Deepslate-Android/actions"><img src="https://github.com/zacxyonly/Deepslate-Android/actions/workflows/android.yml/badge.svg" alt="Build Deepslate Launcher"></a>
+  <img src="https://img.shields.io/badge/Platform-Android-green.svg" alt="Platform Android">
+  <img src="https://img.shields.io/badge/Theme-Dark-18181b.svg" alt="Theme Dark">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-LGPL--3.0-blue.svg" alt="License LGPLv3"></a>
+</p>
 
-*From [Boardwalk](https://github.com/zhuowei/Boardwalk)'s ashes and [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)'s ruined reputation, here comes Amethyst!*
+---
 
-Amethyst is a launcher that allows you to play Minecraft: Java Edition on your Android and [iOS](https://github.com/AngelAuraMC/Amethyst-iOS) devices.
+## 🌟 Highlights & Key Features
 
-For more details, check out our [wiki](https://wiki.angelauramc.dev)!
+* 🔓 **Unlocked Local Authentication:** Bebas membuat dan menggunakan akun lokal (offline) langsung dari awal tanpa harus memiliki akun Microsoft resmi terlebih dahulu.
+* 📦 **Unrestricted Downloads:** Pengunduhan game vanilla, library, dan aset Minecraft tetap berfungsi penuh dan lancar pada akun lokal saat terhubung ke internet.
+* 🧩 **Full Modloader & Custom JAR Support:** Mendukung instalasi Forge, Fabric, NeoForge, Quilt, LWJGL3ify, serta custom installer `.jar` langsung dari launcher.
+* 🛡️ **Consistent Signing Keystore:** Seluruh build APK (baik Release maupun Debug) ditandatangani dengan keystore permanen yang konsisten, mencegah error *conflicting signature* saat update aplikasi di Android.
+* 🌒 **Dark Aesthetic:** Didesain dengan tema gelap modern yang nyaman di mata untuk sesi bermain panjang.
+* 🆔 **Valid Offline UUID:** Otomatis menghasilkan UUID standar Minecraft offline berbasis username, menjaga data inventory, achievement, dan kompatibilitas server LAN tetap aman.
+* ⚙️ **Manual & Auto GitHub Actions:** Workflow CI siap pakai dengan opsi build manual (`workflow_dispatch`) untuk meng-compile APK Debug, Release, atau keduanya langsung di GitHub Actions.
 
-## Table of Contents
+---
 
-* [Introduction](#introduction)
-* [Getting Amethyst](#getting-amethyst)
-* [Building](#building)
-    * [Quick Build (Recommended)](#quick-build-recommended)
-    * [Detailed Build](#detailed-build)
-* [Current Status](#current-status)
-* [Known Issues](#known-issues)
-* [FAQ](#faq)
-* [Contributing](#contributing)
-* [Support](#support)
-* [License](#license)
-* [Credits & Dependencies](#credits--dependencies)
-* [Roadmap](#roadmap)
+## 📥 Getting Deepslate Launcher
 
-## Introduction
+### 1. Download via GitHub Actions (Recommended)
+1. Buka tab **[Actions](https://github.com/zacxyonly/Deepslate-Android/actions)** pada repositori ini.
+2. Pilih workflow run terbaru yang berhasil (tanda centang hijau).
+3. Scroll ke bagian **Artifacts** di bagian bawah halaman untuk mengunduh:
+   * `deepslate-release` (APK Release siap instal)
+   * `deepslate-debug` (APK Debug)
 
-* Amethyst is a Minecraft: Java Edition launcher for Android and iOS based on [Boardwalk](https://github.com/zhuowei/Boardwalk) and [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)
-* This launcher can launch almost all available Minecraft versions ranging from rd-132211 to 26.3-snapshot-1.
-* Modding via Forge and Fabric are also supported.
-* This repository contains source code for Android. For iOS/iPadOS, check out [Amethyst-iOS](https://github.com/AngelAuraMC/Amethyst-iOS).
+### 2. Manual Build via GitHub Actions
+Kamu bisa men-trigger build secara manual kapan saja:
+1. Buka tab **[Actions](https://github.com/zacxyonly/Deepslate-Android/actions)** -> **Build Deepslate Launcher**.
+2. Klik **Run workflow**.
+3. Pilih tipe build (`all`, `release`, atau `debug`) dan jalankan.
 
-## Getting Amethyst
+---
 
-You can get Amethyst via two methods:
+## 🔨 Building Locally
 
-1. **Releases:** Download the latest prebuilt app from [nightly.link](https://nightly.link/AngelAuraMC/Amethyst-Android/workflows/android/v3_openjdk/app-debug%20%28recommended%29.zip) or select an older version from our [automatic builds](https://github.com/AngelAuraMC/Amethyst-Android/actions).
-2. **Build from Source:** Follow the [building instructions](#building) below.
+### Prasyarat
+* Linux / macOS / Windows (WSL2 direkomendasikan)
+* JDK 21 ([Temurin](https://adoptium.net/temurin/releases) atau OpenJDK)
+* Android SDK (compileSdk 37, ndkVersion 27.3.13750724)
+* Pastikan path direktori tidak mengandung spasi.
 
-## Building
+### Langkah Build
+```bash
+# Clone beserta seluruh submodule
+git clone --recursive https://github.com/zacxyonly/Deepslate-Android.git
+cd Deepslate-Android
 
-### Pre-requisites
+# Jalankan script persiapan bahasa
+chmod +x ./scripts/*.sh
+./scripts/languagelist_updater.sh
 
-<details>
+# Build Release APK
+./gradlew :app_pojavlauncher:assembleRelease
 
-<summary>Preparing your build environment</summary>
+# Atau build Debug APK
+./gradlew :app_pojavlauncher:assembleDebug
+```
+Output APK akan berada di:
+* `app_pojavlauncher/build/outputs/apk/release/app_pojavlauncher-release.apk`
+* `app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk`
 
-1. ⚠️ Because of an upstream [issue](https://github.com/android/ndk/issues/1400#issuecomment-744620270) with ndk-build, do not clone the repository into any directory whose absolute path contains spaces. Doing so on will result in a build failure.
+---
 
-2. You must have a JDK installation, [Temurin](https://adoptium.net/temurin/releases) or [OpenJDK](https://openjdk.org/install/) are recommended, and a `JAVA_HOME` system environment variable configured for compiling your builds
+## 🗺️ Roadmap & Rencana Fitur
+- [x] Bypass pembatasan akun Microsoft (Bebas Local Account).
+- [x] Penandatanganan konsisten dengan Deepslate Keystore.
+- [x] Workflow CI GitHub Actions mandiri dengan manual trigger.
+- [ ] Penggantian icon aplikasi dengan tema Deepslate Dark.
+- [ ] Kustomisasi tampilan UI tema dark / AMOLED.
+- [ ] Optimasi performa render engine & integrasi mod performa.
+- [ ] Fitur kustom HUD dan controller mobile lanjutan.
 
-</details>
+---
 
-### Quick Build (Recommended)
+## 📜 License
 
-The easiest way to build Amethyst is to use the pre-built JREs provided by our CI.
+Deepslate Launcher dilisensikan di bawah **[GNU Lesser General Public License v3.0 (LGPL-3.0)](LICENSE)**.
 
-1. Clone the repository: `git clone --recursive https://github.com/AngelAuraMC/Amethyst-Android.git`
-2. Build the launcher: `./gradlew :app_pojavlauncher:assembleDebug` (Use `gradlew.bat` on Windows)
+---
 
-The built APK will be located in `app_pojavlauncher/build/outputs/apk/debug/`.
+## 🤝 Credits & Acknowledgments
 
-### Detailed Build
-
-If you need more control over the build process, follow these steps:
-
-1. **Java Runtime Environment (JRE):** Download the `jre8-pojav` artifact from our [CI auto builds](https://github.com/AngelAuraMC/openjdk-build-multiarch/actions), unzip and paste the contents of the downloaded zip into `app_pojavlauncher/src/main/assets/components/jre/`, create the folder if it does not exist.  This package contains pre-built JREs for all supported architectures.  If you need to build the JRE yourself, follow the instructions in the [android-openjdk-build-multiarch](https://github.com/AngelAuraMC/openjdk-build-multiarch) repository.
-
-2. **LWJGL:** The build instructions for the custom LWJGL are available over the [LWJGL repository](https://github.com/AngelAuraMC/lwjgl3).
-
-3. **Language List:** Because languages are auto-added by Crowdin, you need to run the language list generator before building. In the project directory, run:
-   * Linux/macOS:
-     ```bash
-     chmod +x scripts/languagelist_updater.sh
-     bash scripts/languagelist_updater.sh
-     ```
-   * Windows:
-     ```batch
-     scripts\languagelist_updater.bat
-     ```
-
-4. **Build GLFW stub:** `./gradlew :jre_lwjgl3glfw:build`
-
-5. **Build the launcher:** `./gradlew :app_pojavlauncher:assembleDebug` (Replace `gradlew` with `gradlew.bat` on Windows).
-
-## Current Status
-
-* [x] OpenJDK 8 Mobile port: ARM32, ARM64, x86, x86_64
-* [x] OpenJDK 17 Mobile port: ARM32, ARM64, x86, x86_64
-* [x] OpenJDK 21 Mobile port: ARM32, ARM64, x86, x86_64
-* [x] Headless mod installer
-* [x] Mod installer with GUI
-* [x] OpenGL in OpenJDK environment
-* [x] OpenAL (works on most devices)
-* [x] Support for Minecraft 1.12.2 and below
-* [x] Support for Minecraft 1.13 and above
-* [x] Support for Minecraft 1.17 (22w13a) and above
-* [x] Game surface zooming
-* [x] New input pipe rewritten to native code
-* [x] Rewritten entire controls system
-* [ ] More to come!
-
-## Known Issues
-
-See our [issue tracker](https://github.com/AngelAuraMC/Amethyst-Android/issues) for a list of known issues and their current status.
-
-## FAQ
-
-See our [wiki](https://wiki.angelauramc.dev/) for more information.
-
-## Contributing
-
-Contributions are welcome! We welcome any type of contribution, not only code. For example, you can help improve the [wiki](https://github.com/AngelAuraMC/angelauramc.github.io/), contribute to the [translations](https://crowdin.com/project/pojavlauncher), or submit bug reports and feature requests.
-
-Any code change should be submitted as a pull request. The description should explain what the code does and give steps to execute it.
-
-## Support
-
-For support, please join our [Discord server](https://discord.gg/5ptqkyZxEy).
-
-## License
-
-Amethyst is licensed under [GNU LGPLv3](https://github.com/AngelAuraMC/Amethyst-Android/blob/v3_openjdk/LICENSE).
-
-## Credits & Dependencies
-
-* [Boardwalk](https://github.com/zhuowei/Boardwalk) (JVM Launcher): Unknown License/[Apache License 2.0](https://github.com/zhuowei/Boardwalk/blob/master/LICENSE) or GNU GPLv2.
-* [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher): [GLGPL](https://github.com/PojavLauncherTeam/PojavLauncher/blob/v3_openjdk/LICENSE)
-* Android Support Libraries: [Apache License 2.0](https://android.googlesource.com/platform/prebuilts/maven_repo/android/+/master/NOTICE.txt).
-* [GL4ES](https://github.com/AngelAuraMC/gl4es): [MIT License](https://github.com/ptitSeb/gl4es/blob/master/LICENSE).
-* [MobileGlues](https://github.com/MobileGL-Dev/MobileGlues): [LGPL-2.1 License](https://github.com/MobileGL-Dev/MobileGlues/blob/dev-es/LICENSE).
-* [Krypton Wrapper](https://github.com/BZLZHH/NG-GL4ES): [MIT License](https://github.com/BZLZHH/NG-GL4ES/blob/main/LICENSE)
-* [ANGLE](https://chromium.googlesource.com/angle/angle): [All Rights Reserved](app_pojavlauncher/src/main/assets/licenses/ANGLE_LICENSE).
-* [OpenJDK](https://github.com/AngelAuraMC/openjdk-multiarch-jdk8u): [GNU GPLv2 License](https://openjdk.java.net/legal/gplv2+ce.html).
-* [LWJGL3](https://github.com/AngelAuraMC/lwjgl3): [BSD-3 License](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md).
-* [LWJGLX](https://github.com/AngelAuraMC/lwjglx) (LWJGL2 API compatibility layer for LWJGL3): unknown license.
-* [Mesa 3D Graphics Library](https://gitlab.freedesktop.org/mesa/mesa): [MIT License](https://docs.mesa3d.org/license.html).
-* [bhook](https://github.com/bytedance/bhook) (Used for exit code trapping): [MIT license](https://github.com/bytedance/bhook/blob/main/LICENSE).
-* [libepoxy](https://github.com/anholt/libepoxy): [MIT License](https://github.com/anholt/libepoxy/blob/master/COPYING).
-* [virglrenderer](https://github.com/AngelAuraMC/virglrenderer): [MIT License](https://gitlab.freedesktop.org/virgl/virglrenderer/-/blob/master/COPYING).
-* [OpenAL-Soft](https://github.com/kcat/openal-soft): [GNU GPLv2](app_pojavlauncher/src/main/assets/licenses/OPENAL-SOFT_GPL2)
-  * [oboe](https://github.com/google/oboe): [Apache License 2.0](app_pojavlauncher/src/main/assets/licenses/OBOE_APACHE2).
-  * [pfffft](https://bitbucket.org/jpommier/pffft/src/master/): [ARR](app_pojavlauncher/src/main/assets/licenses/PFFFT_LICENSE)
-* [SDL3](https://github.com/libsdl-org/SDL): [zlib License](https://github.com/libsdl-org/SDL/blob/main/LICENSE.txt)
-* [sdl2-compat](https://github.com/libsdl-org/sdl2-compat): [zlib License](https://github.com/libsdl-org/sdl2-compat/blob/main/LICENSE.txt)
-* Thanks to [MCHeads](https://mc-heads.net) for providing Minecraft avatars.
-
-## Roadmap
-
-We are currently focusing on:
-
-* Exploring new rendering technologies.
-
-Future plans include:
-
-* Improving stability and performance.
-* Enhancing the mod installation experience.
-
-We welcome community feedback and suggestions for our roadmap.  Please feel free to open a feature request in our [issue tracker](https://github.com/AngelAuraMC/Amethyst-Android/issues).
+Deepslate Launcher dibangun atas fondasi karya hebat komunitas open-source:
+* **[Amethyst-Android](https://github.com/AngelAuraMC/Amethyst-Android)** oleh tim AngelAuraMC.
+* **[PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)** oleh tim PojavLauncher.
+* **[Boardwalk](https://github.com/zhuowei/Boardwalk)** oleh zhuowei.
+* Seluruh pustaka pihak ketiga: OpenJDK Mobile, GL4ES, MobileGlues, SDL3, ANGLE, dan OpenAL-Soft.
