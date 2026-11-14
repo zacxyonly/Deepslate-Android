@@ -517,6 +517,7 @@
     <string name="angelica_found_sfpew_notice">Angelica mod found, Simple FPE Wrapper not needed</string>
     <string name="use_angle_checkbox">Use ANGLE (might help FPS)</string>
 
+    <string name="profiles_back">Back</string>
     <string name="main_download_content">Download Mods &amp; Resources</string>
     <string name="hint_search_content">Search mods, resource packs, shaders…</string>
     <string name="category_mods">Mods</string>
