@@ -63,6 +63,10 @@ public class CommonApi implements ModpackApi {
             // and the previous result is null, it means that na error has occured on the previous
             // page. We lost contingency anyway, so don't bother requesting.
             if(previousPageResult != null && results[i] == null) continue;
+            // Modrinth does not host maps/worlds; skip querying it for maps
+            if (SearchFilters.TYPE_MAP.equals(searchFilters.projectType) && mModpackApis[i] instanceof ModrinthApi) {
+                continue;
+            }
             futures[i] = PojavApplication.sExecutorService.submit(new ApiDownloadTask(i, searchFilters,
                     results[i]));
         }

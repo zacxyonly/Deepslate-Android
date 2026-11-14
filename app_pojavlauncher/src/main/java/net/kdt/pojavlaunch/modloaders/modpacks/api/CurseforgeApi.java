@@ -47,9 +47,35 @@ public class CurseforgeApi implements ModpackApi{
     private static final int CURSEFORGE_PAGINATION_END_REACHED = -1;
     private static final int CURSEFORGE_PAGINATION_ERROR = -2;
 
-    private final ApiHandler mApiHandler;
+    public static final String DEFAULT_MIRROR_URL = "https://mod.mcimirror.top/curseforge/v1";
+    public static final String OFFICIAL_API_URL = "https://api.curseforge.com/v1";
+
+    private final ApiHandler mPrimaryApiHandler;
+    private final ApiHandler mFallbackApiHandler;
+
     public CurseforgeApi(String apiKey) {
-        mApiHandler = new ApiHandler("https://api.curseforge.com/v1", apiKey);
+        if (apiKey != null && !apiKey.isEmpty() && !"DUMMY".equalsIgnoreCase(apiKey)) {
+            mPrimaryApiHandler = new ApiHandler(OFFICIAL_API_URL, apiKey);
+        } else {
+            mPrimaryApiHandler = new ApiHandler(DEFAULT_MIRROR_URL);
+        }
+        mFallbackApiHandler = new ApiHandler(DEFAULT_MIRROR_URL);
+    }
+
+    private <T> T getFromApi(String endpoint, Class<T> tClass) {
+        T res = mPrimaryApiHandler.get(endpoint, tClass);
+        if (res == null && mPrimaryApiHandler != mFallbackApiHandler) {
+            res = mFallbackApiHandler.get(endpoint, tClass);
+        }
+        return res;
+    }
+
+    private <T> T getFromApi(String endpoint, HashMap<String, Object> params, Class<T> tClass) {
+        T res = mPrimaryApiHandler.get(endpoint, params, tClass);
+        if (res == null && mPrimaryApiHandler != mFallbackApiHandler) {
+            res = mFallbackApiHandler.get(endpoint, params, tClass);
+        }
+        return res;
     }
 
     @Override
@@ -86,7 +112,17 @@ public class CurseforgeApi implements ModpackApi{
         if(previousPageResult != null)
             params.put("index", curseforgeSearchResult.previousOffset);
 
-        JsonObject response = mApiHandler.get("mods/search", params, JsonObject.class);
+        JsonObject response = getFromApi("mods/search", params, JsonObject.class);
+        // Smart fallback for Maps: if filtering by specific gameVersion gave 0 results, retry without gameVersion
+        if (SearchFilters.TYPE_MAP.equals(pType) && params.containsKey("gameVersion")) {
+            if (response == null || response.getAsJsonArray("data") == null || response.getAsJsonArray("data").size() == 0) {
+                params.remove("gameVersion");
+                JsonObject broad = getFromApi("mods/search", params, JsonObject.class);
+                if (broad != null && broad.getAsJsonArray("data") != null && broad.getAsJsonArray("data").size() > 0) {
+                    response = broad;
+                }
+            }
+        }
         if(response == null) return null;
         JsonArray dataArray = response.getAsJsonArray("data");
         if(dataArray == null) return null;
@@ -152,7 +188,13 @@ public class CurseforgeApi implements ModpackApi{
             versionNames[i] = modDetail.get("displayName").getAsString();
             versionIds[i] = modDetail.get("id").getAsString();
             JsonElement downloadUrl = modDetail.get("downloadUrl");
-            versionUrls[i] = downloadUrl.getAsString();
+            if (downloadUrl != null && !downloadUrl.isJsonNull()) {
+                versionUrls[i] = downloadUrl.getAsString();
+            } else {
+                int fid = modDetail.has("id") ? modDetail.get("id").getAsInt() : 0;
+                String fn = modDetail.has("fileName") ? modDetail.get("fileName").getAsString() : "";
+                versionUrls[i] = String.format("https://edge.forgecdn.net/files/%s/%s/%s", fid / 1000, fid % 1000, fn);
+            }
 
             JsonArray gameVersions = modDetail.getAsJsonArray("gameVersions");
             try {
@@ -184,7 +226,7 @@ public class CurseforgeApi implements ModpackApi{
 
     private void fillInMissingModItemData(ModItem item) {
         if (!(item.title == null || item.description == null || item.imageUrl == null)) return;
-        JsonObject response = mApiHandler.get(String.format("mods/%s", item.id), JsonObject.class);
+        JsonObject response = getFromApi(String.format("mods/%s", item.id), JsonObject.class);
         JsonObject data = GsonJsonUtils.getJsonObjectSafe(response, "data");
         if (data == null) return;
         if (item.title == null) {
@@ -221,7 +263,7 @@ public class CurseforgeApi implements ModpackApi{
         params.put("index", index);
         params.put("pageSize", CURSEFORGE_PAGINATION_SIZE);
 
-        JsonObject response = mApiHandler.get("mods/"+modId+"/files", params, JsonObject.class);
+        JsonObject response = getFromApi("mods/"+modId+"/files", params, JsonObject.class);
         JsonArray data = GsonJsonUtils.getJsonArraySafe(response, "data");
         if(data == null) return CURSEFORGE_PAGINATION_ERROR;
 
@@ -300,13 +342,13 @@ public class CurseforgeApi implements ModpackApi{
     }
 
     private String getDownloadUrl(long projectID, long fileID) {
-        // First try the official api endpoint
-        JsonObject response = mApiHandler.get("mods/"+projectID+"/files/"+fileID+"/download-url", JsonObject.class);
+        // First try the api endpoint
+        JsonObject response = getFromApi("mods/"+projectID+"/files/"+fileID+"/download-url", JsonObject.class);
         if (response != null && !response.get("data").isJsonNull())
             return response.get("data").getAsString();
 
         // Otherwise, fallback to building an edge link
-        JsonObject fallbackResponse = mApiHandler.get(String.format("mods/%s/files/%s", projectID, fileID), JsonObject.class);
+        JsonObject fallbackResponse = getFromApi(String.format("mods/%s/files/%s", projectID, fileID), JsonObject.class);
         if (fallbackResponse != null && !fallbackResponse.get("data").isJsonNull()){
             JsonObject modData = fallbackResponse.get("data").getAsJsonObject();
             int id = modData.get("id").getAsInt();
@@ -318,7 +360,7 @@ public class CurseforgeApi implements ModpackApi{
 
     private @Nullable String getDownloadSha1(long projectID, long fileID) {
         // Try the api endpoint, die in the other case
-        JsonObject response = mApiHandler.get("mods/"+projectID+"/files/"+fileID, JsonObject.class);
+        JsonObject response = getFromApi("mods/"+projectID+"/files/"+fileID, JsonObject.class);
         JsonObject data = GsonJsonUtils.getJsonObjectSafe(response, "data");
         if(data == null) return null;
         return getSha1FromModData(data);
