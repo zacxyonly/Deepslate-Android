@@ -39,7 +39,7 @@
             android:layout_marginHorizontal="@dimen/padding_small"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/search_mod_back"
-            app:layout_constraintEnd_toStartOf="@id/search_mod_filter">
+            app:layout_constraintEnd_toStartOf="@id/search_mod_manage">
 
             <EditText
                 android:id="@+id/search_mod_edittext"
@@ -73,10 +73,24 @@
         </FrameLayout>
 
         <ImageButton
+            android:id="@+id/search_mod_manage"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:minWidth="@dimen/_36sdp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_folder"
+            android:paddingHorizontal="@dimen/padding_small"
+            android:contentDescription="@string/main_manage_content"
+            app:tint="@color/primary_text"
+            app:layout_constraintEnd_toStartOf="@id/search_mod_filter"
+            app:layout_constraintTop_toTopOf="@id/search_bar_layout"
+            app:layout_constraintBottom_toBottomOf="@id/search_bar_layout" />
+
+        <ImageButton
             android:id="@+id/search_mod_filter"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:minWidth="@dimen/_38sdp"
+            android:minWidth="@dimen/_36sdp"
             android:background="?android:attr/selectableItemBackground"
             android:src="@drawable/ic_filter"
             android:paddingHorizontal="@dimen/padding_small"

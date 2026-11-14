@@ -34,6 +34,7 @@ import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.modloaders.modpacks.ModItemAdapter;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.CommonApi;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.ModpackApi;
+import net.kdt.pojavlaunch.modloaders.modpacks.models.ManagedItem;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.SearchFilters;
 import net.kdt.pojavlaunch.profiles.VersionSelectorDialog;
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
@@ -104,8 +105,12 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initFiltersFromProfile();
-        if (getArguments() != null && getArguments().getBoolean("is_modpack", false)) {
-            mSearchFilters.setProjectType(SearchFilters.TYPE_MODPACK);
+        if (getArguments() != null) {
+            if (getArguments().getBoolean("is_modpack", false)) {
+                mSearchFilters.setProjectType(SearchFilters.TYPE_MODPACK);
+            } else if (getArguments().containsKey("initial_type")) {
+                mSearchFilters.setProjectType(getArguments().getString("initial_type"));
+            }
         }
 
         mModItemAdapter = new ModItemAdapter(getResources(), modpackApi, this);
@@ -116,6 +121,7 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         mBackButton = view.findViewById(R.id.search_mod_back);
         mSearchEditText = view.findViewById(R.id.search_mod_edittext);
         mClearSearchButton = view.findViewById(R.id.search_mod_clear_btn);
+        ImageButton mManageButton = view.findViewById(R.id.search_mod_manage);
         mFilterButton = view.findViewById(R.id.search_mod_filter);
         mSearchProgressBar = view.findViewById(R.id.search_mod_progressbar);
         mRecyclerview = view.findViewById(R.id.search_mod_list);
@@ -185,6 +191,22 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         mBtnModpacks.setOnClickListener(v -> selectCategory(SearchFilters.TYPE_MODPACK));
 
         mFilterButton.setOnClickListener(v -> displayFilterDialog());
+
+        if (mManageButton != null) {
+            mManageButton.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                if (SearchFilters.TYPE_MODPACK.equals(mSearchFilters.projectType)) {
+                    bundle.putBoolean("is_modpack", true);
+                } else if (SearchFilters.TYPE_RESOURCEPACK.equals(mSearchFilters.projectType)) {
+                    bundle.putInt("category", ManagedItem.TYPE_RESOURCEPACK);
+                } else if (SearchFilters.TYPE_SHADER.equals(mSearchFilters.projectType)) {
+                    bundle.putInt("category", ManagedItem.TYPE_SHADER);
+                } else {
+                    bundle.putInt("category", ManagedItem.TYPE_MOD);
+                }
+                Tools.swapFragment(requireActivity(), ContentManagerFragment.class, ContentManagerFragment.TAG, bundle);
+            });
+        }
 
         // Chip click listeners
         if (mChipVersion != null) {

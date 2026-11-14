@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_card"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingHorizontal="@dimen/padding_medium"
+    android:paddingVertical="@dimen/padding_medium"
+    android:layout_marginVertical="@dimen/padding_small">
+
+    <!-- Thumbnail Icon -->
+    <ImageView
+        android:id="@+id/managed_item_icon"
+        android:layout_width="@dimen/_42sdp"
+        android:layout_height="@dimen/_42sdp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_menu_install_jar" />
+
+    <!-- Actions Container (Switch / Delete / Buttons) -->
+    <LinearLayout
+        android:id="@+id/managed_item_actions_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.kdt.mcgui.MineButton
+            android:id="@+id/managed_item_btn_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/_28sdp"
+            android:textSize="@dimen/_11ssp"
+            android:textColor="@color/primary_text"
+            android:paddingHorizontal="@dimen/padding_small"
+            android:visibility="gone"
+            android:layout_marginEnd="@dimen/padding_tiny"
+            tools:text="Pilih" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/managed_item_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/padding_tiny"
+            app:thumbTint="@color/minebutton_color" />
+
+        <ImageButton
+            android:id="@+id/managed_item_delete"
+            android:layout_width="@dimen/_32sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_menu_delete_forever"
+            app:tint="@color/error_text"
+            android:contentDescription="@string/global_delete" />
+
+    </LinearLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/managed_item_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/_13ssp"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/padding_moderate"
+        android:layout_marginEnd="@dimen/padding_small"
+        app:layout_constraintStart_toEndOf="@id/managed_item_icon"
+        app:layout_constraintEnd_toStartOf="@id/managed_item_actions_container"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Sodium" />
+
+    <!-- Meta row: Version • Size • Status -->
+    <TextView
+        android:id="@+id/managed_item_meta"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/minebutton_color"
+        android:textSize="@dimen/_11ssp"
+        android:layout_marginStart="@dimen/padding_moderate"
+        android:layout_marginEnd="@dimen/padding_small"
+        app:layout_constraintStart_toEndOf="@id/managed_item_icon"
+        app:layout_constraintEnd_toStartOf="@id/managed_item_actions_container"
+        app:layout_constraintTop_toBottomOf="@id/managed_item_title"
+        tools:text="0.5.8 • 1.2 MB • Aktif" />
+
+    <!-- Description or File Name -->
+    <TextView
+        android:id="@+id/managed_item_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@color/subtext_color"
+        android:textSize="@dimen/_12ssp"
+        android:layout_marginStart="@dimen/padding_moderate"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_marginTop="2dp"
+        app:layout_constraintStart_toEndOf="@id/managed_item_icon"
+        app:layout_constraintEnd_toStartOf="@id/managed_item_actions_container"
+        app:layout_constraintTop_toBottomOf="@id/managed_item_meta"
+        tools:text="sodium-fabric-mc1.20.4-0.5.8.jar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -540,4 +540,30 @@
     <string name="filter_auto_profile">Match Active Profile</string>
     <string name="filter_target_profile">Target: %1$s</string>
 
+    <string name="main_manage_content">Manage Mods &amp; Resources</string>
+    <string name="manager_title">Content Manager</string>
+    <string name="manager_search_hint">Search installed content…</string>
+    <string name="manager_profile_label">Profile:</string>
+    <string name="manager_status_summary">%1$d installed (%2$d enabled)</string>
+    <string name="manager_status_enabled">Enabled</string>
+    <string name="manager_status_disabled">Disabled</string>
+    <string name="manager_btn_download">Download Content</string>
+    <string name="manager_btn_open_folder">Open Folder</string>
+    <string name="manager_btn_import">+ Import File</string>
+    <string name="manager_delete_confirm_title">Delete Content</string>
+    <string name="manager_delete_confirm_msg">Are you sure you want to delete "%1$s"? This file will be permanently deleted.</string>
+    <string name="manager_profile_active">Active</string>
+    <string name="manager_profile_set_active">Select</string>
+    <string name="manager_profile_edit">Edit</string>
+    <string name="manager_empty_mods_title">No Mods Installed</string>
+    <string name="manager_empty_mods_desc">The mods folder for this profile is currently empty.</string>
+    <string name="manager_empty_resourcepacks_title">No Resource Packs Installed</string>
+    <string name="manager_empty_resourcepacks_desc">The resourcepacks folder for this profile is currently empty.</string>
+    <string name="manager_empty_shaders_title">No Shaders Installed</string>
+    <string name="manager_empty_shaders_desc">The shaderpacks folder for this profile is currently empty.</string>
+    <string name="manager_empty_modpacks_title">No Custom Modpacks</string>
+    <string name="manager_empty_modpacks_desc">No modpack profiles found in your launcher.</string>
+    <string name="manager_import_success">Imported successfully: %1$s</string>
+    <string name="manager_import_failed">Failed to import file.</string>
+    <string name="manager_profile_cannot_delete_last">Cannot delete the only remaining profile.</string>
 </resources>

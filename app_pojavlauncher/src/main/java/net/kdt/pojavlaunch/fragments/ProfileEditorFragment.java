@@ -127,10 +127,24 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
 
         mUseANGLE.setOnClickListener(v -> mTempProfile.useANGLE = ((CheckBox) v).isChecked());
 
+        Button mManageContentButton = view.findViewById(R.id.vprof_editor_manage_content_button);
+        if (mManageContentButton != null) {
+            mManageContentButton.setOnClickListener(v -> {
+                ProfileIconCache.dropIcon(mProfileKey);
+                save();
+                Bundle bundle = new Bundle();
+                bundle.putString("profile_key", mProfileKey);
+                Tools.swapFragment(requireActivity(), ContentManagerFragment.class, ContentManagerFragment.TAG, bundle);
+            });
+        }
+
         // Set up the icon change click listener
         mProfileIcon.setOnClickListener(v -> CropperUtils.startCropper(mCropperLauncher));
 
-        loadValues(LauncherPreferences.DEFAULT_PREF.getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, ""), view.getContext());
+        String profileKeyToLoad = (getArguments() != null && getArguments().containsKey("profile_key"))
+                ? getArguments().getString("profile_key")
+                : LauncherPreferences.DEFAULT_PREF.getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+        loadValues(profileKeyToLoad, view.getContext());
     }
 
     private View.OnClickListener getGameDirListener() {

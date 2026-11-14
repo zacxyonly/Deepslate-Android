@@ -446,4 +446,31 @@
     <string name="filter_modloader_all">Semua Loader</string>
     <string name="filter_auto_profile">Sesuaikan Profil Aktif</string>
     <string name="filter_target_profile">Tujuan: %1$s</string>
+
+    <string name="main_manage_content">Kelola Mod &amp; Resource Pack</string>
+    <string name="manager_title">Manager Konten</string>
+    <string name="manager_search_hint">Cari konten terpasang…</string>
+    <string name="manager_profile_label">Profil:</string>
+    <string name="manager_status_summary">%1$d terpasang (%2$d aktif)</string>
+    <string name="manager_status_enabled">Aktif</string>
+    <string name="manager_status_disabled">Nonaktif</string>
+    <string name="manager_btn_download">Unduh Konten</string>
+    <string name="manager_btn_open_folder">Buka Folder</string>
+    <string name="manager_btn_import">+ Impor File</string>
+    <string name="manager_delete_confirm_title">Hapus Konten</string>
+    <string name="manager_delete_confirm_msg">Apakah Anda yakin ingin menghapus "%1$s"? File ini akan dihapus secara permanen dari perangkat.</string>
+    <string name="manager_profile_active">Aktif</string>
+    <string name="manager_profile_set_active">Pilih</string>
+    <string name="manager_profile_edit">Edit</string>
+    <string name="manager_empty_mods_title">Belum Ada Mod Terpasang</string>
+    <string name="manager_empty_mods_desc">Folder mods untuk profil ini masih kosong.</string>
+    <string name="manager_empty_resourcepacks_title">Belum Ada Resource Pack Terpasang</string>
+    <string name="manager_empty_resourcepacks_desc">Folder resourcepacks untuk profil ini masih kosong.</string>
+    <string name="manager_empty_shaders_title">Belum Ada Shader Terpasang</string>
+    <string name="manager_empty_shaders_desc">Folder shaderpacks untuk profil ini masih kosong.</string>
+    <string name="manager_empty_modpacks_title">Belum Ada Modpack Khusus</string>
+    <string name="manager_empty_modpacks_desc">Tidak ditemukan profil modpack di launcher Anda.</string>
+    <string name="manager_import_success">Berhasil mengimpor: %1$s</string>
+    <string name="manager_import_failed">Gagal mengimpor file.</string>
+    <string name="manager_profile_cannot_delete_last">Tidak dapat menghapus satu-satunya profil yang tersisa.</string>
 </resources>
