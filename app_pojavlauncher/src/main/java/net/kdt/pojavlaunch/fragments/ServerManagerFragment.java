@@ -31,12 +31,12 @@ import net.kdt.pojavlaunch.PojavApplication;
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
-import net.kdt.pojavlaunch.prefs.LauncherProfiles;
 import net.kdt.pojavlaunch.servers.ServerData;
 import net.kdt.pojavlaunch.servers.ServerListAdapter;
 import net.kdt.pojavlaunch.servers.ServerPinger;
 import net.kdt.pojavlaunch.servers.ServersDatUtils;
-import net.kdt.pojavlaunch.value.MinecraftProfile;
+import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
+import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
 import java.io.File;
 import java.util.ArrayList;
