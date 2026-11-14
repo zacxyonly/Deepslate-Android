@@ -523,6 +523,17 @@
     <string name="category_resourcepacks">Resource Packs</string>
     <string name="category_shaders">Shaders</string>
     <string name="category_modpacks">Modpacks</string>
+    <string name="search_mod_all_versions">All Versions</string>
+    <string name="search_mod_all_loaders">All Loaders</string>
+    <string name="search_mod_search_all_versions">Search All Versions</string>
+    <string name="search_mod_reset_filters">Reset Filters</string>
+    <string name="search_mod_no_results_title">No content found</string>
+    <string name="search_mod_no_results_desc">Try searching for something else or clear the version filter to find content for all Minecraft versions.</string>
+    <string name="search_mod_select_version_label">Select Version:</string>
+    <string name="search_mod_install">Install</string>
+    <string name="search_mod_installed_toast">Installed %s</string>
+    <string name="search_mod_filter_version_chip">Version: %s</string>
+    <string name="search_mod_filter_loader_chip">Loader: %s</string>
     <string name="filter_modloader">Mod Loader</string>
     <string name="filter_modloader_all">All Loaders</string>
     <string name="filter_auto_profile">Match Active Profile</string>

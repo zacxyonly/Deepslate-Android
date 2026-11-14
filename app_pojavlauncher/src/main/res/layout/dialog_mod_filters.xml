@@ -21,25 +21,44 @@
         android:id="@+id/search_mod_selected_mc_version_textview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/padding_small"
         android:background="@drawable/background_line"
-        android:hint="@string/version_select_hint"
-        android:paddingHorizontal="@dimen/padding_heavy"
+        android:hint="@string/search_mod_all_versions"
+        android:paddingHorizontal="@dimen/padding_medium"
         android:paddingVertical="@dimen/padding_medium"
-        android:textSize="@dimen/_13ssp"
-        app:layout_constraintEnd_toStartOf="@+id/search_mod_mc_version_button"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintEnd_toStartOf="@+id/search_mod_version_buttons_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_mod_mc_version_textview" />
 
-    <Button
-        android:id="@+id/search_mod_mc_version_button"
+    <LinearLayout
+        android:id="@+id/search_mod_version_buttons_container"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:paddingHorizontal="@dimen/padding_large"
-        android:text="@string/global_select"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/search_mod_selected_mc_version_textview"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/search_mod_selected_mc_version_textview" />
+        app:layout_constraintTop_toTopOf="@+id/search_mod_selected_mc_version_textview">
+
+        <Button
+            android:id="@+id/search_mod_mc_version_clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/padding_small"
+            android:text="@string/search_mod_all_versions"
+            android:textAllCaps="false"
+            android:textSize="@dimen/_9ssp"
+            android:layout_marginEnd="@dimen/_2sdp" />
+
+        <Button
+            android:id="@+id/search_mod_mc_version_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/padding_small"
+            android:text="@string/global_select"
+            android:textAllCaps="false"
+            android:textSize="@dimen/_9ssp" />
+    </LinearLayout>
 
     <!-- Modloader filter -->
     <TextView

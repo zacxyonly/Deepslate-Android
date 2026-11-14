@@ -430,6 +430,17 @@
     <string name="category_resourcepacks">Resource Pack</string>
     <string name="category_shaders">Shader</string>
     <string name="category_modpacks">Modpack</string>
+    <string name="search_mod_all_versions">Semua Versi</string>
+    <string name="search_mod_all_loaders">Semua Loader</string>
+    <string name="search_mod_search_all_versions">Cari di Semua Versi</string>
+    <string name="search_mod_reset_filters">Reset Filter</string>
+    <string name="search_mod_no_results_title">Tidak ada konten ditemukan</string>
+    <string name="search_mod_no_results_desc">Coba gunakan kata kunci lain atau hapus filter versi untuk melihat konten dari semua versi Minecraft.</string>
+    <string name="search_mod_select_version_label">Pilih Versi:</string>
+    <string name="search_mod_install">Pasang</string>
+    <string name="search_mod_installed_toast">Berhasil memasang %s</string>
+    <string name="search_mod_filter_version_chip">Versi: %s</string>
+    <string name="search_mod_filter_loader_chip">Loader: %s</string>
     <string name="filter_modloader">Mod Loader</string>
     <string name="filter_modloader_all">Semua Loader</string>
     <string name="filter_auto_profile">Sesuaikan Profil Aktif</string>

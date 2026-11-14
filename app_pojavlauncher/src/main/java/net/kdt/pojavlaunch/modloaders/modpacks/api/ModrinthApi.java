@@ -85,13 +85,17 @@ public class ModrinthApi implements ModpackApi {
         for (int i = 0; i < responseHits.size(); ++i) {
             JsonObject hit = responseHits.get(i).getAsJsonObject();
             String hitType = hit.has("project_type") ? hit.get("project_type").getAsString() : pType;
+            String author = hit.has("author") && !hit.get("author").isJsonNull() ? hit.get("author").getAsString() : null;
+            long downloads = hit.has("downloads") && !hit.get("downloads").isJsonNull() ? hit.get("downloads").getAsLong() : 0L;
             items[i] = new ModItem(
                     Constants.SOURCE_MODRINTH,
                     hitType,
                     hit.get("project_id").getAsString(),
                     hit.get("title").getAsString(),
                     hit.get("description").getAsString(),
-                    hit.has("icon_url") && !hit.get("icon_url").isJsonNull() ? hit.get("icon_url").getAsString() : null
+                    hit.has("icon_url") && !hit.get("icon_url").isJsonNull() ? hit.get("icon_url").getAsString() : null,
+                    author,
+                    downloads
             );
         }
         if (modrinthSearchResult == null) modrinthSearchResult = new ModrinthSearchResult();
@@ -226,12 +230,14 @@ public class ModrinthApi implements ModpackApi {
 
         File targetFile = new File(targetDir, fileName);
         byte[] downloadBuffer = new byte[8192];
-        ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.modpack_download_downloading_mods, 0, 100);
+        ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.modpack_download_downloading_mods, 0.0f, 0.0f);
 
         DownloadUtils.downloadFileMonitored(downloadUrl, targetFile, downloadBuffer, (bytesRead, totalBytes) -> {
             if (totalBytes > 0) {
                 int percent = (int) ((bytesRead * 100) / totalBytes);
-                ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, percent, R.string.modpack_download_downloading_mods, percent, 100);
+                float readMB = (float) bytesRead / (1024f * 1024f);
+                float totalMB = (float) totalBytes / (1024f * 1024f);
+                ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, percent, R.string.modpack_download_downloading_mods, readMB, totalMB);
             }
         });
 

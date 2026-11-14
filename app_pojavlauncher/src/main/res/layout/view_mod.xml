@@ -5,80 +5,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_line"
-    android:paddingHorizontal="@dimen/_2sdp"
-    android:paddingVertical="@dimen/_2sdp"
-    android:layout_marginVertical="@dimen/padding_medium"
-    >
+    android:background="@drawable/background_mod_card"
+    android:padding="@dimen/_8sdp"
+    android:layout_marginVertical="@dimen/_3sdp">
 
+    <!-- Mod / Pack Thumbnail -->
     <ImageView
         android:id="@+id/mod_thumbnail_imageview"
-        android:layout_width="@dimen/_65sdp"
-        android:layout_height="@dimen/_65sdp"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        tools:src="@mipmap/ic_launcher_foreground"
-        />
-
-    <ImageView
-        android:id="@+id/mod_source_imageview"
-        android:layout_width="@dimen/_13sdp"
-        android:layout_height="@dimen/_13sdp"
-        android:layout_marginTop="3dp"
-
-        android:layout_marginEnd="3dp"
+        android:layout_width="@dimen/_52sdp"
+        android:layout_height="@dimen/_52sdp"
         android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@mipmap/ic_launcher_foreground" />
 
+    <!-- Platform source badge (Modrinth / CurseForge) -->
+    <ImageView
+        android:id="@+id/mod_source_imageview"
+        android:layout_width="@dimen/_14sdp"
+        android:layout_height="@dimen/_14sdp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_modrinth" />
+
+    <!-- Title -->
     <TextView
         android:id="@+id/mod_title_textview"
-        style="@style/TextAppearance.AppCompat.Body2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:layout_marginStart="@dimen/padding_moderate"
         android:ellipsize="end"
-
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintEnd_toStartOf="@+id/mod_source_imageview"
-        app:layout_constraintStart_toEndOf="@+id/mod_thumbnail_imageview"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/_12ssp"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
+        app:layout_constraintStart_toEndOf="@id/mod_thumbnail_imageview"
+        app:layout_constraintEnd_toStartOf="@id/mod_source_imageview"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Feed the beast - Reforged" />
+        tools:text="Sodium" />
 
+    <!-- Meta row: Author & Downloads count -->
     <TextView
-        android:id="@+id/mod_body_textview"
-        style="@style/TextAppearance.AppCompat.Body1"
+        android:id="@+id/mod_meta_textview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/padding_medium"
-        android:layout_marginEnd="@dimen/padding_medium"
+        android:maxLines="1"
         android:ellipsize="end"
-        android:maxLines="3"
+        android:textColor="@color/minebutton_color"
+        android:textSize="@dimen/_9ssp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_1sdp"
+        app:layout_constraintStart_toEndOf="@id/mod_thumbnail_imageview"
+        app:layout_constraintEnd_toStartOf="@id/mod_source_imageview"
+        app:layout_constraintTop_toBottomOf="@id/mod_title_textview"
+        tools:text="👤 jellysquid3 • ⬇ 42.5M" />
 
+    <!-- Short Description -->
+    <TextView
+        android:id="@+id/mod_body_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_9ssp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_2sdp"
+        app:layout_constraintStart_toEndOf="@id/mod_thumbnail_imageview"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/mod_title_textview"
-        app:layout_constraintTop_toBottomOf="@+id/mod_title_textview"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="Feed the beast - Reforged is a machine and magic focused modpack, with no respect for the minimum requirements of minecraft. Very long text" />
+        app:layout_constraintTop_toBottomOf="@id/mod_meta_textview"
+        tools:text="A modern rendering engine for Minecraft that greatly improves frame rates and reduces stutter." />
 
-
-    <!--
-        When clicked for the first time, the view is extended with more information.
-        Inflating later is cheaper, hence the stub
-     -->
+    <!-- Expandable version selector and install button -->
     <ViewStub
         android:id="@+id/mod_limited_state_stub"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout="@layout/view_mod_extended"
-        app:layout_constraintTop_toBottomOf="@id/mod_thumbnail_imageview"/>
-
-
+        android:layout_marginTop="@dimen/_6sdp"
+        app:layout_constraintTop_toBottomOf="@id/mod_thumbnail_imageview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

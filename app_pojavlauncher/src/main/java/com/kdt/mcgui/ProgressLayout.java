@@ -149,8 +149,34 @@ public class ProgressLayout extends ConstraintLayout implements View.OnClickList
         public void onProgressUpdated(int progress, int resid, Object... va) {
             post(()-> {
                 textView.setProgress(progress);
-                if(resid != -1) textView.setText(getContext().getString(resid, va));
-                else if(va.length > 0 && va[0] != null)textView.setText((String)va[0]);
+                if(resid != -1) {
+                    try {
+                        textView.setText(getContext().getString(resid, va));
+                    } catch (Exception e) {
+                        android.util.Log.w("ProgressLayout", "Failed to format progress string for resid=" + resid + ": " + e.getMessage());
+                        try {
+                            // Fallback: coerce numbers in case format specifier expects float vs int
+                            Object[] coerced = new Object[va.length];
+                            for (int i = 0; i < va.length; i++) {
+                                if (va[i] instanceof Integer || va[i] instanceof Long) {
+                                    coerced[i] = ((Number) va[i]).floatValue();
+                                } else if (va[i] instanceof Float || va[i] instanceof Double) {
+                                    coerced[i] = ((Number) va[i]).intValue();
+                                } else {
+                                    coerced[i] = va[i];
+                                }
+                            }
+                            textView.setText(getContext().getString(resid, coerced));
+                        } catch (Exception e2) {
+                            try {
+                                textView.setText(getContext().getString(resid));
+                            } catch (Exception e3) {
+                                textView.setText(progress + "%");
+                            }
+                        }
+                    }
+                }
+                else if(va.length > 0 && va[0] != null) textView.setText((String)va[0]);
                 else textView.setText("");
             });
         }

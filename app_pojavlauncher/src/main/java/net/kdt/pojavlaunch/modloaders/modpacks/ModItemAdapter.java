@@ -150,7 +150,7 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         private ModDetail mModDetail = null;
         private ModItem mModItem = null;
-        private final TextView mTitle, mDescription;
+        private final TextView mTitle, mDescription, mMeta;
         private final ImageView mIconView, mSourceView;
         private View mExtendedLayout;
         private Spinner mExtendedSpinner;
@@ -224,6 +224,7 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             // Define click listener for the ViewHolder's View
             mTitle = view.findViewById(R.id.mod_title_textview);
             mDescription = view.findViewById(R.id.mod_body_textview);
+            mMeta = view.findViewById(R.id.mod_meta_textview);
             mIconView = view.findViewById(R.id.mod_thumbnail_imageview);
             mSourceView = view.findViewById(R.id.mod_source_imageview);
         }
@@ -261,6 +262,27 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mTitle.setText(item.title);
             mDescription.setText(item.description);
 
+            if (mMeta != null) {
+                StringBuilder meta = new StringBuilder();
+                if (item.author != null && !item.author.isEmpty()) {
+                    meta.append("👤 ").append(item.author);
+                }
+                String dls = item.getFormattedDownloads();
+                if (dls != null) {
+                    if (meta.length() > 0) meta.append("  •  ");
+                    meta.append("⬇ ").append(dls);
+                }
+                if (item.projectType != null) {
+                    if (meta.length() > 0) meta.append("  •  ");
+                    if (SearchFilters.TYPE_MOD.equals(item.projectType)) meta.append("Mod");
+                    else if (SearchFilters.TYPE_RESOURCEPACK.equals(item.projectType)) meta.append("Resource Pack");
+                    else if (SearchFilters.TYPE_SHADER.equals(item.projectType)) meta.append("Shader");
+                    else if (SearchFilters.TYPE_MODPACK.equals(item.projectType)) meta.append("Modpack");
+                }
+                mMeta.setText(meta.toString());
+                mMeta.setVisibility(meta.length() > 0 ? View.VISIBLE : View.GONE);
+            }
+
             if(hasExtended()){
                 closeDetailedView();
             }
@@ -295,7 +317,7 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         private void closeDetailedView(){
             mExtendedLayout.setVisibility(View.GONE);
-            mDescription.setMaxLines(3);
+            mDescription.setMaxLines(2);
         }
 
         private void setDetailedStateDefault() {

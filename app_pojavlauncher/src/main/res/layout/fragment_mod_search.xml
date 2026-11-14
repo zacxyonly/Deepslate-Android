@@ -4,70 +4,97 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_app"
-    android:paddingHorizontal="@dimen/fragment_padding_medium">
+    android:background="@color/background_app">
 
+    <!-- Top floating control overlay containing search, tabs, and filter chips -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/search_mod_overlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_overlay"
         android:paddingHorizontal="@dimen/padding_medium"
-        android:paddingVertical="@dimen/padding_small"
-        android:layout_marginTop="@dimen/fragment_padding_medium"
-        android:translationZ="10dp"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_small"
+        android:translationZ="12dp"
+        android:elevation="6dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Top row: Back button, Search input, Filter button -->
+        <!-- Top row: Back button, Search bar, Filter button -->
         <ImageButton
             android:id="@+id/search_mod_back"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:minWidth="@dimen/_38sdp"
-            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_back_white"
-            android:paddingHorizontal="@dimen/padding_small"
+            android:contentDescription="@string/profiles_back"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/search_mod_edittext"
-            app:layout_constraintBottom_toBottomOf="@id/search_mod_edittext" />
+            app:layout_constraintTop_toTopOf="@id/search_bar_container"
+            app:layout_constraintBottom_toBottomOf="@id/search_bar_container" />
 
-        <EditText
-            android:id="@+id/search_mod_edittext"
+        <LinearLayout
+            android:id="@+id/search_bar_container"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_line"
-            android:textSize="@dimen/_13ssp"
-            android:ems="10"
-            android:hint="@string/hint_search_content"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:paddingHorizontal="@dimen/padding_heavy"
-            android:paddingVertical="@dimen/padding_small"
-            android:layout_marginHorizontal="@dimen/padding_small"
+            android:layout_height="@dimen/_36sdp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_search_bar"
+            android:paddingHorizontal="@dimen/padding_medium"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/search_mod_back"
-            app:layout_constraintEnd_toStartOf="@id/search_mod_filter" />
+            app:layout_constraintEnd_toStartOf="@id/search_mod_filter">
+
+            <ImageView
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:src="@drawable/ic_search_white"
+                app:tint="#94a3b8" />
+
+            <EditText
+                android:id="@+id/search_mod_edittext"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/hint_search_content"
+                android:textColor="@color/primary_text"
+                android:textColorHint="#64748b"
+                android:textSize="@dimen/_11ssp"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:paddingHorizontal="@dimen/padding_small"
+                android:singleLine="true" />
+
+            <ImageButton
+                android:id="@+id/search_mod_clear_btn"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_clear_white"
+                android:visibility="gone"
+                app:tint="#94a3b8" />
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/search_mod_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:minWidth="@dimen/_38sdp"
-            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_filter"
-            android:paddingHorizontal="@dimen/padding_small"
+            android:contentDescription="@string/filter_modloader"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/search_mod_edittext"
-            app:layout_constraintBottom_toBottomOf="@id/search_mod_edittext" />
+            app:layout_constraintTop_toTopOf="@id/search_bar_container"
+            app:layout_constraintBottom_toBottomOf="@id/search_bar_container" />
 
-        <!-- Category selector bar -->
+        <!-- Category selector horizontal bar -->
         <HorizontalScrollView
             android:id="@+id/search_category_scrollview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none"
-            android:layout_marginTop="@dimen/padding_small"
-            app:layout_constraintTop_toBottomOf="@id/search_mod_edittext">
+            android:layout_marginTop="@dimen/_6sdp"
+            app:layout_constraintTop_toBottomOf="@id/search_bar_container">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -78,95 +105,249 @@
                     android:id="@+id/category_mods_button"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_28sdp"
-                    android:background="@drawable/background_line"
+                    android:layout_height="@dimen/_26sdp"
+                    android:background="@drawable/background_tab_pill"
                     android:text="@string/category_mods"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingHorizontal="@dimen/padding_medium"
-                    android:layout_marginEnd="@dimen/padding_small" />
+                    android:textSize="@dimen/_10ssp"
+                    android:paddingHorizontal="@dimen/padding_large"
+                    android:layout_marginEnd="@dimen/_4sdp" />
 
                 <Button
                     android:id="@+id/category_resourcepacks_button"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_28sdp"
-                    android:background="@drawable/background_line"
+                    android:layout_height="@dimen/_26sdp"
+                    android:background="@drawable/background_tab_pill"
                     android:text="@string/category_resourcepacks"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingHorizontal="@dimen/padding_medium"
-                    android:layout_marginEnd="@dimen/padding_small" />
+                    android:textSize="@dimen/_10ssp"
+                    android:paddingHorizontal="@dimen/padding_large"
+                    android:layout_marginEnd="@dimen/_4sdp" />
 
                 <Button
                     android:id="@+id/category_shaders_button"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_28sdp"
-                    android:background="@drawable/background_line"
+                    android:layout_height="@dimen/_26sdp"
+                    android:background="@drawable/background_tab_pill"
                     android:text="@string/category_shaders"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingHorizontal="@dimen/padding_medium"
-                    android:layout_marginEnd="@dimen/padding_small" />
+                    android:textSize="@dimen/_10ssp"
+                    android:paddingHorizontal="@dimen/padding_large"
+                    android:layout_marginEnd="@dimen/_4sdp" />
 
                 <Button
                     android:id="@+id/category_modpacks_button"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_28sdp"
-                    android:background="@drawable/background_line"
+                    android:layout_height="@dimen/_26sdp"
+                    android:background="@drawable/background_tab_pill"
                     android:text="@string/category_modpacks"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/_11ssp"
-                    android:paddingHorizontal="@dimen/padding_medium" />
+                    android:textSize="@dimen/_10ssp"
+                    android:paddingHorizontal="@dimen/padding_large" />
 
             </LinearLayout>
         </HorizontalScrollView>
 
-        <!-- Subtitle: Active profile & filter indicator -->
-        <TextView
-            android:id="@+id/search_mod_target_info"
+        <!-- Interactive Filter Chips Row -->
+        <HorizontalScrollView
+            android:id="@+id/search_filter_chips_scrollview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_small"
-            android:textSize="@dimen/_10ssp"
-            android:textColor="#AAAAAA"
-            android:ellipsize="end"
-            android:maxLines="1"
-            tools:text="Target: (Default) • Fabric 1.20.1"
-            app:layout_constraintTop_toBottomOf="@id/search_category_scrollview" />
+            android:scrollbars="none"
+            android:layout_marginTop="@dimen/_4sdp"
+            app:layout_constraintTop_toBottomOf="@id/search_category_scrollview">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Version Chip -->
+                <LinearLayout
+                    android:id="@+id/search_mod_chip_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_22sdp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/background_filter_chip"
+                    android:paddingStart="@dimen/_8sdp"
+                    android:paddingEnd="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_4sdp">
+
+                    <TextView
+                        android:id="@+id/search_mod_chip_version_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_9ssp"
+                        android:textColor="@color/minebutton_color"
+                        android:text="@string/search_mod_all_versions" />
+
+                    <ImageView
+                        android:id="@+id/search_mod_chip_version_clear"
+                        android:layout_width="@dimen/_14sdp"
+                        android:layout_height="@dimen/_14sdp"
+                        android:src="@drawable/ic_clear_white"
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/_2sdp"
+                        app:tint="#94a3b8" />
+                </LinearLayout>
+
+                <!-- ModLoader Chip -->
+                <LinearLayout
+                    android:id="@+id/search_mod_chip_loader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_22sdp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/background_filter_chip"
+                    android:paddingStart="@dimen/_8sdp"
+                    android:paddingEnd="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_4sdp">
+
+                    <TextView
+                        android:id="@+id/search_mod_chip_loader_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_9ssp"
+                        android:textColor="@color/minebutton_color"
+                        android:text="@string/search_mod_all_loaders" />
+
+                    <ImageView
+                        android:id="@+id/search_mod_chip_loader_clear"
+                        android:layout_width="@dimen/_14sdp"
+                        android:layout_height="@dimen/_14sdp"
+                        android:src="@drawable/ic_clear_white"
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/_2sdp"
+                        app:tint="#94a3b8" />
+                </LinearLayout>
+
+                <!-- Target Profile Info -->
+                <TextView
+                    android:id="@+id/search_mod_target_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_8ssp"
+                    android:textColor="#64748b"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:paddingHorizontal="@dimen/_4sdp"
+                    tools:text="Profile: (Default)" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Loading indicator -->
         <ProgressBar
             android:id="@+id/search_mod_progressbar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_2sdp"
             android:indeterminate="true"
             android:visibility="gone"
-            android:layout_marginTop="@dimen/padding_small"
-            app:layout_constraintTop_toBottomOf="@id/search_mod_target_info" />
+            android:layout_marginTop="@dimen/_4sdp"
+            app:layout_constraintTop_toBottomOf="@id/search_filter_chips_scrollview" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Main Results RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_mod_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/_15sdp"
         android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:paddingBottom="@dimen/_16sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Modern Empty State View -->
+    <LinearLayout
+        android:id="@+id/search_mod_empty_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="@dimen/padding_large"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="@dimen/_48sdp"
+            android:layout_height="@dimen/_48sdp"
+            android:src="@drawable/ic_search_white"
+            app:tint="#475569" />
+
+        <TextView
+            android:id="@+id/search_mod_empty_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_mod_no_results_title"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_13ssp"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/_8sdp" />
+
+        <TextView
+            android:id="@+id/search_mod_empty_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_mod_no_results_desc"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/_10ssp"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_4sdp" />
+
+        <!-- Quick 1-tap Action Buttons -->
+        <Button
+            android:id="@+id/search_mod_btn_search_all_versions"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_30sdp"
+            android:background="@drawable/background_install_btn"
+            android:text="@string/search_mod_search_all_versions"
+            android:textColor="#0f1216"
+            android:textStyle="bold"
+            android:textSize="@dimen/_10ssp"
+            android:textAllCaps="false"
+            android:paddingHorizontal="@dimen/padding_heavy"
+            android:layout_marginTop="@dimen/_12sdp" />
+
+        <Button
+            android:id="@+id/search_mod_btn_reset_filters"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_28sdp"
+            android:background="@drawable/background_filter_chip"
+            android:text="@string/search_mod_reset_filters"
+            android:textColor="@color/minebutton_color"
+            android:textSize="@dimen/_9ssp"
+            android:textAllCaps="false"
+            android:paddingHorizontal="@dimen/padding_large"
+            android:layout_marginTop="@dimen/_6sdp" />
+
+    </LinearLayout>
+
+    <!-- Legacy / Error Status Text -->
     <TextView
         android:id="@+id/search_mod_status_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/search_mod_list"
-        app:layout_constraintEnd_toEndOf="@+id/search_mod_list"
-        app:layout_constraintStart_toStartOf="@+id/search_mod_list"
-        app:layout_constraintTop_toTopOf="@+id/search_mod_list" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

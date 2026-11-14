@@ -1,40 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/_6sdp"
+    android:layout_marginTop="@dimen/_4sdp">
 
+    <!-- Subtle divider line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#242c38"
+        android:layout_marginBottom="@dimen/_6sdp" />
 
     <TextView
         android:id="@+id/mod_extended_error_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/search_modpack_download_error"
-        android:textColor="#FFFF0000"
+        android:textColor="#f87171"
+        android:textSize="@dimen/_9ssp"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="@dimen/_4sdp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search_mod_select_version_label"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_9ssp"
+        android:layout_marginBottom="@dimen/_2sdp" />
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/mod_extended_version_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/_30sdp"
-        android:layout_marginVertical="@dimen/padding_moderate"
-        app:layout_constraintTop_toBottomOf="@+id/mod_extended_error_textview"
-        />
+        android:layout_height="@dimen/_28sdp"
+        android:background="@drawable/background_rounded_spinner"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:layout_marginBottom="@dimen/_6sdp" />
 
-    <com.kdt.mcgui.MineButton
+    <Button
         android:id="@+id/mod_extended_select_version_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:text="@string/generic_install"
-        android:layout_marginHorizontal="@dimen/padding_large"
-        android:layout_marginTop="@dimen/padding_moderate"
-        android:layout_marginBottom="@dimen/padding_large"
+        android:layout_height="@dimen/_28sdp"
+        android:background="@drawable/background_install_btn"
+        android:text="@string/search_mod_install"
+        android:textColor="#0f1216"
+        android:textSize="@dimen/_10ssp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:enabled="false" />
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mod_extended_version_spinner" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -72,6 +72,13 @@ public class CurseforgeApi implements ModpackApi{
         params.put("sortOrder", "desc");
         if(searchFilters.mcVersion != null && !searchFilters.mcVersion.isEmpty())
             params.put("gameVersion", searchFilters.mcVersion);
+        if (SearchFilters.TYPE_MOD.equals(pType) && searchFilters.modLoader != null && !searchFilters.modLoader.isEmpty()) {
+            String loader = searchFilters.modLoader.toLowerCase();
+            if (loader.contains("forge") && !loader.contains("neo")) params.put("modLoaderType", 1);
+            else if (loader.contains("fabric")) params.put("modLoaderType", 4);
+            else if (loader.contains("quilt")) params.put("modLoaderType", 5);
+            else if (loader.contains("neo")) params.put("modLoaderType", 6);
+        }
         if(previousPageResult != null)
             params.put("index", curseforgeSearchResult.previousOffset);
 
@@ -90,12 +97,25 @@ public class CurseforgeApi implements ModpackApi{
                 Log.i("CurseforgeApi", "Skipping modpack "+dataElement.get("name").getAsString() + " because curseforge sucks");
                 continue;
             }
+            String author = null;
+            if (dataElement.has("authors") && dataElement.getAsJsonArray("authors").size() > 0) {
+                try {
+                    author = dataElement.getAsJsonArray("authors").get(0).getAsJsonObject().get("name").getAsString();
+                } catch (Exception ignored) {}
+            }
+            long downloads = dataElement.has("downloadCount") ? dataElement.get("downloadCount").getAsLong() : 0L;
+            String logoUrl = null;
+            if (dataElement.has("logo") && !dataElement.get("logo").isJsonNull() && dataElement.getAsJsonObject("logo").has("thumbnailUrl")) {
+                logoUrl = dataElement.getAsJsonObject("logo").get("thumbnailUrl").getAsString();
+            }
             ModItem modItem = new ModItem(Constants.SOURCE_CURSEFORGE,
                     pType,
                     dataElement.get("id").getAsString(),
                     dataElement.get("name").getAsString(),
                     dataElement.get("summary").getAsString(),
-                    dataElement.getAsJsonObject("logo").get("thumbnailUrl").getAsString());
+                    logoUrl,
+                    author,
+                    downloads);
             modItemList.add(modItem);
         }
         if(curseforgeSearchResult == null) curseforgeSearchResult = new CurseforgeSearchResult();
@@ -226,12 +246,14 @@ public class CurseforgeApi implements ModpackApi{
 
         File targetFile = new File(targetDir, fileName);
         byte[] downloadBuffer = new byte[8192];
-        ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.modpack_download_downloading_mods, 0, 100);
+        ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.modpack_download_downloading_mods, 0.0f, 0.0f);
 
         net.kdt.pojavlaunch.utils.DownloadUtils.downloadFileMonitored(downloadUrl, targetFile, downloadBuffer, (bytesRead, totalBytes) -> {
             if (totalBytes > 0) {
                 int percent = (int) ((bytesRead * 100) / totalBytes);
-                ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, percent, R.string.modpack_download_downloading_mods, percent, 100);
+                float readMB = (float) bytesRead / (1024f * 1024f);
+                float totalMB = (float) totalBytes / (1024f * 1024f);
+                ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, percent, R.string.modpack_download_downloading_mods, readMB, totalMB);
             }
         });
 
