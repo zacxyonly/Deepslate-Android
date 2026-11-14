@@ -70,12 +70,13 @@ android {
 
     signingConfigs {
         customDebug {
-            def debugStore = file("debug.keystore")
+            def storePath = System.getenv("DEBUG_KEYSTORE_FILE") ?: "deepslate.keystore"
+            def debugStore = file(storePath)
             if (debugStore.exists()) {
                 storeFile debugStore
-                storePassword "android"
-                keyAlias "androiddebugkey"
-                keyPassword "android"
+                storePassword System.getenv("DEBUG_KEYSTORE_PASSWORD") ?: "deepslate"
+                keyAlias System.getenv("DEBUG_KEY_ALIAS") ?: "deepslate"
+                keyPassword System.getenv("DEBUG_KEY_PASSWORD") ?: "deepslate"
             }
         }
         customRelease {
