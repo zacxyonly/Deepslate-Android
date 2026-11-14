@@ -12,4 +12,6 @@
 
     <color name="primary_text">#FFFFFF</color>
     <color name="secondary_text">#94a3b8</color>
+    <color name="subtext_color">#cbd5e1</color>
+    <color name="error_text">#f87171</color>
 </resources>

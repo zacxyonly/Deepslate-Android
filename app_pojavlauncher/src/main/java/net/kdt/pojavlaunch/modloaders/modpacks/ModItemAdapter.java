@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.RecyclerView;
@@ -231,9 +232,9 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mIconView = view.findViewById(R.id.mod_thumbnail_imageview);
             mSourceView = view.findViewById(R.id.mod_source_imageview);
 
-            if (mTitle != null) mTitle.setTextColor(Color.WHITE);
-            if (mDescription != null) mDescription.setTextColor(Color.parseColor("#cbd5e1"));
-            if (mMeta != null) mMeta.setTextColor(Color.parseColor("#38bdf8"));
+            if (mTitle != null) mTitle.setTextColor(ContextCompat.getColor(view.getContext(), R.color.primary_text));
+            if (mDescription != null) mDescription.setTextColor(ContextCompat.getColor(view.getContext(), R.color.subtext_color));
+            if (mMeta != null) mMeta.setTextColor(ContextCompat.getColor(view.getContext(), R.color.minebutton_color));
         }
 
         /** Display basic info about the moditem */

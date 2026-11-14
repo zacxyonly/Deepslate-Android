@@ -26,6 +26,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kdt.mcgui.MineButton;
+
 import net.kdt.pojavlaunch.JMinecraftVersionList;
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
@@ -61,10 +63,10 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
     private EditText mSearchEditText;
     private ImageButton mClearSearchButton;
     private ImageButton mFilterButton;
-    private TextView mBtnMods;
-    private TextView mBtnResourcePacks;
-    private TextView mBtnShaders;
-    private TextView mBtnModpacks;
+    private MineButton mBtnMods;
+    private MineButton mBtnResourcePacks;
+    private MineButton mBtnShaders;
+    private MineButton mBtnModpacks;
 
     private View mChipVersion;
     private TextView mChipVersionText;
@@ -336,15 +338,12 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         updateTabButton(mBtnModpacks, SearchFilters.TYPE_MODPACK.equals(currentType));
     }
 
-    private void updateTabButton(TextView button, boolean isSelected) {
+    private void updateTabButton(MineButton button, boolean isSelected) {
         if (button == null) return;
         button.setSelected(isSelected);
-        if (isSelected) {
-            button.setTextColor(Color.WHITE);
-            button.setTypeface(null, Typeface.BOLD);
-        } else {
-            button.setTextColor(Color.parseColor("#cbd5e1"));
-            button.setTypeface(null, Typeface.NORMAL);
+        if (getContext() != null) {
+            button.setTextColor(ContextCompat.getColor(getContext(),
+                    isSelected ? R.color.minebutton_color : R.color.primary_text));
         }
     }
 

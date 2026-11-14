@@ -25,17 +25,17 @@
         android:id="@+id/search_mod_selected_mc_version_textview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/_32sdp"
+        android:minHeight="@dimen/_36sdp"
         android:gravity="center_vertical"
         android:layout_marginEnd="@dimen/padding_small"
         android:layout_marginTop="@dimen/padding_small"
-        android:background="@drawable/background_chip_selector"
+        android:background="@drawable/background_line"
         android:hint="@string/search_mod_all_versions"
         android:textColor="@color/primary_text"
         android:textColorHint="@color/secondary_text"
         android:paddingHorizontal="@dimen/padding_medium"
         android:paddingVertical="@dimen/_6sdp"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="@dimen/_12ssp"
         app:layout_constraintEnd_toStartOf="@+id/search_mod_version_buttons_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_mod_mc_version_textview" />
@@ -43,32 +43,30 @@
     <LinearLayout
         android:id="@+id/search_mod_version_buttons_container"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/search_mod_selected_mc_version_textview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/search_mod_selected_mc_version_textview">
 
-        <Button
+        <com.kdt.mcgui.MineButton
             android:id="@+id/search_mod_mc_version_clear_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/padding_small"
             android:text="@string/search_mod_all_versions"
             android:textColor="@color/primary_text"
-            android:textAllCaps="false"
-            android:textSize="@dimen/_9ssp"
+            android:textSize="@dimen/_12ssp"
             android:layout_marginEnd="@dimen/_2sdp" />
 
-        <Button
+        <com.kdt.mcgui.MineButton
             android:id="@+id/search_mod_mc_version_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/padding_small"
             android:text="@string/global_select"
             android:textColor="@color/primary_text"
-            android:textAllCaps="false"
-            android:textSize="@dimen/_9ssp" />
+            android:textSize="@dimen/_12ssp" />
     </LinearLayout>
 
     <!-- Modloader filter -->
@@ -88,19 +86,19 @@
         android:id="@+id/search_mod_loader_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/_32sdp"
-        android:background="@drawable/background_chip_selector"
+        android:minHeight="@dimen/_36sdp"
+        android:background="@drawable/background_line"
         android:layout_marginTop="@dimen/padding_small"
         app:layout_constraintTop_toBottomOf="@id/search_mod_loader_textview" />
 
     <!-- Match active profile button -->
-    <Button
+    <com.kdt.mcgui.MineButton
         android:id="@+id/search_mod_match_profile_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/filter_auto_profile"
         android:textColor="@color/primary_text"
-        android:textAllCaps="false"
+        android:textSize="@dimen/_12ssp"
         android:layout_marginTop="@dimen/padding_medium"
         app:layout_constraintTop_toBottomOf="@id/search_mod_loader_spinner" />
 
@@ -111,6 +109,7 @@
         android:layout_height="wrap_content"
         android:text="@string/generic_apply"
         android:textColor="@color/primary_text"
+        android:textSize="@dimen/_13ssp"
         android:layout_marginTop="@dimen/padding_medium"
         app:layout_constraintTop_toBottomOf="@id/search_mod_match_profile_button" />
 
