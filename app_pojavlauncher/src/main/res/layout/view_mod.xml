@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_line"
+    android:background="@drawable/background_mod_card"
     android:paddingHorizontal="@dimen/padding_medium"
     android:paddingVertical="@dimen/padding_medium"
     android:layout_marginVertical="@dimen/padding_small">

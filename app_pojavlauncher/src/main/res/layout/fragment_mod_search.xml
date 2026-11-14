@@ -45,7 +45,8 @@
                 android:id="@+id/search_mod_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_line"
+                android:minHeight="@dimen/_34sdp"
+                android:background="@drawable/background_chip_selector"
                 android:textSize="@dimen/_13ssp"
                 android:ems="10"
                 android:hint="@string/hint_search_content"
@@ -98,64 +99,68 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
+                <TextView
                     android:id="@+id/category_mods_button"
-                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_28sdp"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:background="@drawable/background_line"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/_28sdp"
+                    android:gravity="center"
+                    android:background="@drawable/background_tab_selector"
                     android:text="@string/category_mods"
                     android:textColor="#cbd5e1"
                     android:textSize="@dimen/_11ssp"
-                    android:textAllCaps="false"
                     android:paddingHorizontal="@dimen/padding_medium"
-                    android:layout_marginEnd="@dimen/padding_small" />
+                    android:paddingVertical="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/padding_small"
+                    android:clickable="true"
+                    android:focusable="true" />
 
-                <Button
+                <TextView
                     android:id="@+id/category_resourcepacks_button"
-                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_28sdp"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:background="@drawable/background_line"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/_28sdp"
+                    android:gravity="center"
+                    android:background="@drawable/background_tab_selector"
                     android:text="@string/category_resourcepacks"
                     android:textColor="#cbd5e1"
                     android:textSize="@dimen/_11ssp"
-                    android:textAllCaps="false"
                     android:paddingHorizontal="@dimen/padding_medium"
-                    android:layout_marginEnd="@dimen/padding_small" />
+                    android:paddingVertical="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/padding_small"
+                    android:clickable="true"
+                    android:focusable="true" />
 
-                <Button
+                <TextView
                     android:id="@+id/category_shaders_button"
-                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_28sdp"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:background="@drawable/background_line"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/_28sdp"
+                    android:gravity="center"
+                    android:background="@drawable/background_tab_selector"
                     android:text="@string/category_shaders"
                     android:textColor="#cbd5e1"
                     android:textSize="@dimen/_11ssp"
-                    android:textAllCaps="false"
                     android:paddingHorizontal="@dimen/padding_medium"
-                    android:layout_marginEnd="@dimen/padding_small" />
+                    android:paddingVertical="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/padding_small"
+                    android:clickable="true"
+                    android:focusable="true" />
 
-                <Button
+                <TextView
                     android:id="@+id/category_modpacks_button"
-                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_28sdp"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:background="@drawable/background_line"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/_28sdp"
+                    android:gravity="center"
+                    android:background="@drawable/background_tab_selector"
                     android:text="@string/category_modpacks"
                     android:textColor="#cbd5e1"
                     android:textSize="@dimen/_11ssp"
-                    android:textAllCaps="false"
-                    android:paddingHorizontal="@dimen/padding_medium" />
+                    android:paddingHorizontal="@dimen/padding_medium"
+                    android:paddingVertical="@dimen/_5sdp"
+                    android:clickable="true"
+                    android:focusable="true" />
 
             </LinearLayout>
         </HorizontalScrollView>
@@ -178,12 +183,16 @@
                 <LinearLayout
                     android:id="@+id/search_mod_chip_version"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_24sdp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/_24sdp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:background="@drawable/background_line"
+                    android:background="@drawable/background_chip_selector"
                     android:paddingHorizontal="@dimen/padding_small"
-                    android:layout_marginEnd="@dimen/padding_small">
+                    android:paddingVertical="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/padding_small"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <TextView
                         android:id="@+id/search_mod_chip_version_text"
@@ -206,12 +215,16 @@
                 <LinearLayout
                     android:id="@+id/search_mod_chip_loader"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_24sdp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/_24sdp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:background="@drawable/background_line"
+                    android:background="@drawable/background_chip_selector"
                     android:paddingHorizontal="@dimen/padding_small"
-                    android:layout_marginEnd="@dimen/padding_small">
+                    android:paddingVertical="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/padding_small"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <TextView
                         android:id="@+id/search_mod_chip_loader_text"
@@ -311,15 +324,16 @@
         <Button
             android:id="@+id/search_mod_btn_reset_filters"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_28sdp"
-            android:minHeight="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/_28sdp"
             android:minWidth="0dp"
-            android:background="@drawable/background_line"
+            android:background="@drawable/background_chip_selector"
             android:text="@string/search_mod_reset_filters"
             android:textColor="#cbd5e1"
             android:textSize="@dimen/_11ssp"
             android:textAllCaps="false"
             android:paddingHorizontal="@dimen/padding_large"
+            android:paddingVertical="@dimen/_5sdp"
             android:layout_marginTop="@dimen/padding_small" />
 
     </LinearLayout>

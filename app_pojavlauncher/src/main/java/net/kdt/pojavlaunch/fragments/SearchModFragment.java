@@ -61,10 +61,10 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
     private EditText mSearchEditText;
     private ImageButton mClearSearchButton;
     private ImageButton mFilterButton;
-    private Button mBtnMods;
-    private Button mBtnResourcePacks;
-    private Button mBtnShaders;
-    private Button mBtnModpacks;
+    private TextView mBtnMods;
+    private TextView mBtnResourcePacks;
+    private TextView mBtnShaders;
+    private TextView mBtnModpacks;
 
     private View mChipVersion;
     private TextView mChipVersionText;
@@ -336,11 +336,11 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         updateTabButton(mBtnModpacks, SearchFilters.TYPE_MODPACK.equals(currentType));
     }
 
-    private void updateTabButton(Button button, boolean isSelected) {
+    private void updateTabButton(TextView button, boolean isSelected) {
         if (button == null) return;
         button.setSelected(isSelected);
         if (isSelected) {
-            button.setTextColor(Color.parseColor("#38bdf8"));
+            button.setTextColor(Color.WHITE);
             button.setTypeface(null, Typeface.BOLD);
         } else {
             button.setTextColor(Color.parseColor("#cbd5e1"));
