@@ -265,15 +265,15 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (mMeta != null) {
                 StringBuilder meta = new StringBuilder();
                 if (item.author != null && !item.author.isEmpty()) {
-                    meta.append("👤 ").append(item.author);
+                    meta.append(item.author);
                 }
                 String dls = item.getFormattedDownloads();
                 if (dls != null) {
-                    if (meta.length() > 0) meta.append("  •  ");
-                    meta.append("⬇ ").append(dls);
+                    if (meta.length() > 0) meta.append(" • ");
+                    meta.append(dls);
                 }
                 if (item.projectType != null) {
-                    if (meta.length() > 0) meta.append("  •  ");
+                    if (meta.length() > 0) meta.append(" • ");
                     if (SearchFilters.TYPE_MOD.equals(item.projectType)) meta.append("Mod");
                     else if (SearchFilters.TYPE_RESOURCEPACK.equals(item.projectType)) meta.append("Resource Pack");
                     else if (SearchFilters.TYPE_SHADER.equals(item.projectType)) meta.append("Shader");

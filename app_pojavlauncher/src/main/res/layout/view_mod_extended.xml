@@ -4,15 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="@dimen/_6sdp"
-    android:layout_marginTop="@dimen/_4sdp">
-
-    <!-- Subtle divider line -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#242c38"
-        android:layout_marginBottom="@dimen/_6sdp" />
+    android:paddingTop="@dimen/padding_small">
 
     <TextView
         android:id="@+id/mod_extended_error_textview"
@@ -20,37 +12,32 @@
         android:layout_height="wrap_content"
         android:text="@string/search_modpack_download_error"
         android:textColor="#f87171"
-        android:textSize="@dimen/_9ssp"
+        android:textSize="@dimen/_10ssp"
         android:visibility="gone"
-        android:layout_marginBottom="@dimen/_4sdp" />
+        android:layout_marginBottom="@dimen/padding_small" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/search_mod_select_version_label"
         android:textColor="@color/secondary_text"
-        android:textSize="@dimen/_9ssp"
-        android:layout_marginBottom="@dimen/_2sdp" />
+        android:textSize="@dimen/_11ssp" />
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/mod_extended_version_spinner"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_28sdp"
-        android:background="@drawable/background_rounded_spinner"
-        android:paddingHorizontal="@dimen/padding_medium"
-        android:layout_marginBottom="@dimen/_6sdp" />
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/_30sdp"
+        android:background="@drawable/background_line"
+        android:layout_marginVertical="@dimen/padding_small" />
 
-    <Button
+    <com.kdt.mcgui.MineButton
         android:id="@+id/mod_extended_select_version_button"
-        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_28sdp"
-        android:background="@drawable/background_install_btn"
+        android:layout_height="wrap_content"
+        android:enabled="false"
         android:text="@string/search_mod_install"
-        android:textColor="#0f1216"
-        android:textSize="@dimen/_10ssp"
-        android:textStyle="bold"
-        android:textAllCaps="false"
-        android:enabled="false" />
+        android:layout_marginTop="@dimen/padding_small"
+        android:layout_marginBottom="@dimen/padding_small" />
 
 </LinearLayout>

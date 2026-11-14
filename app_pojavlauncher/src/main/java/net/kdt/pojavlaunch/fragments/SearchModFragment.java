@@ -19,6 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.core.math.MathUtils;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -106,7 +107,7 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
 
         mModItemAdapter = new ModItemAdapter(getResources(), modpackApi, this);
         ProgressKeeper.addTaskCountListener(mModItemAdapter);
-        mOverlayTopCache = 0f;
+        mOverlayTopCache = getResources().getDimension(R.dimen.fragment_padding_medium);
 
         mOverlay = view.findViewById(R.id.search_mod_overlay);
         mBackButton = view.findViewById(R.id.search_mod_back);
@@ -337,10 +338,11 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
     private void updateTabButton(Button button, boolean isSelected) {
         if (button == null) return;
         button.setSelected(isSelected);
-        if (isSelected) {
-            button.setTextColor(Color.parseColor("#0f1216"));
+        if (getContext() != null) {
+            button.setTextColor(ContextCompat.getColor(getContext(),
+                    isSelected ? R.color.minebutton_color : R.color.secondary_text));
         } else {
-            button.setTextColor(Color.parseColor("#94a3b8"));
+            button.setTextColor(isSelected ? Color.parseColor("#38bdf8") : Color.parseColor("#94a3b8"));
         }
     }
 
