@@ -278,13 +278,22 @@
                 tools:paddingVertical="@dimen/_12sdp" />
 
             <com.kdt.mcgui.MineButton
-                android:id="@+id/vprof_editor_manage_content_button"
+                android:id="@+id/vprof_editor_download_content_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/main_manage_content"
+                android:text="@string/main_download_content"
                 android:textSize="@dimen/_12ssp"
                 app:layout_constraintTop_toBottomOf="@+id/vprof_editor_profile_angle" />
+
+            <com.kdt.mcgui.MineButton
+                android:id="@+id/vprof_editor_manage_content_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/main_manage_content"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintTop_toBottomOf="@+id/vprof_editor_download_content_button" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

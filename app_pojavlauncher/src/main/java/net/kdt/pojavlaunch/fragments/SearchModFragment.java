@@ -271,7 +271,17 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
 
     private void initFiltersFromProfile() {
         try {
-            MinecraftProfile profile = LauncherProfiles.getCurrentProfile();
+            MinecraftProfile profile = null;
+            if (getArguments() != null && getArguments().containsKey("profile_key")) {
+                String key = getArguments().getString("profile_key");
+                LauncherProfiles.load();
+                if (LauncherProfiles.mainProfileJson != null && LauncherProfiles.mainProfileJson.profiles != null) {
+                    profile = LauncherProfiles.mainProfileJson.profiles.get(key);
+                }
+            }
+            if (profile == null) {
+                profile = LauncherProfiles.getCurrentProfile();
+            }
             if (profile != null && profile.lastVersionId != null) {
                 String id = profile.lastVersionId;
                 String ver = id.toLowerCase();
@@ -399,7 +409,17 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         // Target profile info
         if (mTargetInfoText != null) {
             try {
-                MinecraftProfile profile = LauncherProfiles.getCurrentProfile();
+                MinecraftProfile profile = null;
+                if (getArguments() != null && getArguments().containsKey("profile_key")) {
+                    String key = getArguments().getString("profile_key");
+                    LauncherProfiles.load();
+                    if (LauncherProfiles.mainProfileJson != null && LauncherProfiles.mainProfileJson.profiles != null) {
+                        profile = LauncherProfiles.mainProfileJson.profiles.get(key);
+                    }
+                }
+                if (profile == null) {
+                    profile = LauncherProfiles.getCurrentProfile();
+                }
                 if (profile != null && profile.name != null) {
                     mTargetInfoText.setText("Profile: " + profile.name);
                 } else {
