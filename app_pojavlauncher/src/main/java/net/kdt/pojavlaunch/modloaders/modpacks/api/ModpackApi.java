@@ -83,7 +83,9 @@ public interface ModpackApi {
         return installMod(modDetail, selectedVersion, null);
     }
 
-    ModLoader installMod(ModDetail modDetail, int selectedVersion, @androidx.annotation.Nullable net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile targetProfile) throws IOException;
+    default ModLoader installMod(ModDetail modDetail, int selectedVersion, @androidx.annotation.Nullable net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile targetProfile) throws IOException {
+        return installMod(modDetail, selectedVersion);
+    }
 
     /**
      * Imports the mod(pack) from a file.

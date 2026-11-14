@@ -22,6 +22,8 @@ import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class ContentInstallUtils {
     private static final String TAG = "ContentInstallUtils";
@@ -104,7 +106,7 @@ public class ContentInstallUtils {
                 finalFile.delete();
             }
             if (!partFile.renameTo(finalFile)) {
-                Tools.copyFile(partFile, finalFile);
+                Files.copy(partFile.toPath(), finalFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 partFile.delete();
             }
         } catch (Exception e) {

@@ -122,7 +122,12 @@ public class CommonApi implements ModpackApi {
 
     @Override
     public ModLoader installMod(ModDetail modDetail, int selectedVersion) throws IOException {
-        return getModpackApi(modDetail.apiSource).installMod(modDetail, selectedVersion);
+        return installMod(modDetail, selectedVersion, null);
+    }
+
+    @Override
+    public ModLoader installMod(ModDetail modDetail, int selectedVersion, @androidx.annotation.Nullable net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile targetProfile) throws IOException {
+        return getModpackApi(modDetail.apiSource).installMod(modDetail, selectedVersion, targetProfile);
     }
 
     @Override
