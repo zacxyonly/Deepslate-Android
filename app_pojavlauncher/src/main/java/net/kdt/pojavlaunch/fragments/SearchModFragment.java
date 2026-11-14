@@ -2,6 +2,7 @@ package net.kdt.pojavlaunch.fragments;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -338,11 +339,12 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
     private void updateTabButton(Button button, boolean isSelected) {
         if (button == null) return;
         button.setSelected(isSelected);
-        if (getContext() != null) {
-            button.setTextColor(ContextCompat.getColor(getContext(),
-                    isSelected ? R.color.minebutton_color : R.color.secondary_text));
+        if (isSelected) {
+            button.setTextColor(Color.parseColor("#38bdf8"));
+            button.setTypeface(null, Typeface.BOLD);
         } else {
-            button.setTextColor(isSelected ? Color.parseColor("#38bdf8") : Color.parseColor("#94a3b8"));
+            button.setTextColor(Color.parseColor("#cbd5e1"));
+            button.setTypeface(null, Typeface.NORMAL);
         }
     }
 
@@ -460,8 +462,29 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
             loaders.add("neoforge");
             loaders.add("quilt");
 
-            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireContext(),
-                    android.R.layout.simple_spinner_dropdown_item, loaders);
+            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(requireContext(),
+                    R.layout.item_simple_list_1, loaders) {
+                @NonNull
+                @Override
+                public View getView(int position, @Nullable View convertView, @NonNull android.view.ViewGroup parent) {
+                    View v = super.getView(position, convertView, parent);
+                    if (v instanceof TextView) {
+                        ((TextView) v).setTextColor(ContextCompat.getColor(parent.getContext(), R.color.primary_text));
+                    }
+                    return v;
+                }
+
+                @Override
+                public View getDropDownView(int position, @Nullable View convertView, @NonNull android.view.ViewGroup parent) {
+                    View v = super.getDropDownView(position, convertView, parent);
+                    if (v instanceof TextView) {
+                        ((TextView) v).setTextColor(ContextCompat.getColor(parent.getContext(), R.color.primary_text));
+                        v.setBackgroundColor(ContextCompat.getColor(parent.getContext(), R.color.background_overlay));
+                    }
+                    return v;
+                }
+            };
+            spinnerAdapter.setDropDownViewResource(R.layout.item_simple_list_1);
             mLoaderSpinner.setAdapter(spinnerAdapter);
 
             if (mSearchFilters.modLoader != null) {

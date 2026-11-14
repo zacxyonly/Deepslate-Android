@@ -12,9 +12,7 @@
 
     android:paddingTop="@dimen/padding_input_top"
     android:paddingBottom="@dimen/padding_input_bottom"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
-
-
+    android:textColor="@color/primary_text"
     android:textSize="@dimen/_13ssp"
     android:gravity="center_vertical"
     android:paddingStart="?android:attr/listPreferredItemPaddingStart"

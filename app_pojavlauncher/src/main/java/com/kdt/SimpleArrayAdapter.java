@@ -4,12 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
+import net.kdt.pojavlaunch.R;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,11 +59,25 @@ public class SimpleArrayAdapter<T> extends BaseAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if(convertView == null){
-            convertView = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_simple_list_1, parent, false);
         }
 
         TextView v = (TextView) convertView;
         v.setText(mObjects.get(position).toString());
+        v.setTextColor(ContextCompat.getColor(parent.getContext(), R.color.primary_text));
+        return v;
+    }
+
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        if(convertView == null){
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_simple_list_1, parent, false);
+        }
+
+        TextView v = (TextView) convertView;
+        v.setText(mObjects.get(position).toString());
+        v.setTextColor(ContextCompat.getColor(parent.getContext(), R.color.primary_text));
+        v.setBackgroundColor(ContextCompat.getColor(parent.getContext(), R.color.background_overlay));
         return v;
     }
 }

@@ -50,7 +50,7 @@
                 android:ems="10"
                 android:hint="@string/hint_search_content"
                 android:textColor="@color/primary_text"
-                android:textColorHint="#808080"
+                android:textColorHint="#94a3b8"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:paddingStart="@dimen/padding_heavy"
@@ -68,7 +68,7 @@
                 android:src="@drawable/ic_clear_white"
                 android:visibility="gone"
                 android:contentDescription="@string/search_mod_reset_filters"
-                app:tint="#808080" />
+                app:tint="#cbd5e1" />
         </FrameLayout>
 
         <ImageButton
@@ -103,9 +103,11 @@
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_28sdp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
                     android:background="@drawable/background_line"
                     android:text="@string/category_mods"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="#cbd5e1"
                     android:textSize="@dimen/_11ssp"
                     android:textAllCaps="false"
                     android:paddingHorizontal="@dimen/padding_medium"
@@ -116,9 +118,11 @@
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_28sdp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
                     android:background="@drawable/background_line"
                     android:text="@string/category_resourcepacks"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="#cbd5e1"
                     android:textSize="@dimen/_11ssp"
                     android:textAllCaps="false"
                     android:paddingHorizontal="@dimen/padding_medium"
@@ -129,9 +133,11 @@
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_28sdp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
                     android:background="@drawable/background_line"
                     android:text="@string/category_shaders"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="#cbd5e1"
                     android:textSize="@dimen/_11ssp"
                     android:textAllCaps="false"
                     android:paddingHorizontal="@dimen/padding_medium"
@@ -142,9 +148,11 @@
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_28sdp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
                     android:background="@drawable/background_line"
                     android:text="@string/category_modpacks"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="#cbd5e1"
                     android:textSize="@dimen/_11ssp"
                     android:textAllCaps="false"
                     android:paddingHorizontal="@dimen/padding_medium" />
@@ -192,7 +200,7 @@
                         android:src="@drawable/ic_clear_white"
                         android:visibility="gone"
                         android:layout_marginStart="@dimen/padding_tiny"
-                        app:tint="#808080" />
+                        app:tint="#cbd5e1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -220,7 +228,7 @@
                         android:src="@drawable/ic_clear_white"
                         android:visibility="gone"
                         android:layout_marginStart="@dimen/padding_tiny"
-                        app:tint="#808080" />
+                        app:tint="#cbd5e1" />
                 </LinearLayout>
 
                 <TextView
@@ -228,7 +236,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/_10ssp"
-                    android:textColor="#808080"
+                    android:textColor="#cbd5e1"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:paddingHorizontal="@dimen/padding_small"
@@ -286,7 +294,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search_mod_no_results_desc"
-            android:textColor="@color/secondary_text"
+            android:textColor="#cbd5e1"
             android:textSize="@dimen/_11ssp"
             android:gravity="center"
             android:layout_marginTop="@dimen/padding_small" />
@@ -296,6 +304,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search_mod_search_all_versions"
+            android:textColor="@color/primary_text"
             android:paddingHorizontal="@dimen/padding_large"
             android:layout_marginTop="@dimen/padding_medium" />
 
@@ -303,9 +312,11 @@
             android:id="@+id/search_mod_btn_reset_filters"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_28sdp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
             android:background="@drawable/background_line"
             android:text="@string/search_mod_reset_filters"
-            android:textColor="@color/secondary_text"
+            android:textColor="#cbd5e1"
             android:textSize="@dimen/_11ssp"
             android:textAllCaps="false"
             android:paddingHorizontal="@dimen/padding_large"

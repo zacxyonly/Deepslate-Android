@@ -3,6 +3,7 @@ package net.kdt.pojavlaunch.modloaders.modpacks;
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,6 +176,8 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     mExtendedSpinner = mExtendedLayout.findViewById(R.id.mod_extended_version_spinner);
                     mExtendedErrorTextView = mExtendedLayout.findViewById(R.id.mod_extended_error_textview);
 
+                    if (mExtendedButton != null) mExtendedButton.setTextColor(Color.WHITE);
+
                     mExtendedButton.setOnClickListener(v1 -> mModpackApi.handleInstallation(
                             mExtendedButton.getContext().getApplicationContext(),
                             mModDetail,
@@ -227,6 +230,10 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mMeta = view.findViewById(R.id.mod_meta_textview);
             mIconView = view.findViewById(R.id.mod_thumbnail_imageview);
             mSourceView = view.findViewById(R.id.mod_source_imageview);
+
+            if (mTitle != null) mTitle.setTextColor(Color.WHITE);
+            if (mDescription != null) mDescription.setTextColor(Color.parseColor("#cbd5e1"));
+            if (mMeta != null) mMeta.setTextColor(Color.parseColor("#38bdf8"));
         }
 
         /** Display basic info about the moditem */
