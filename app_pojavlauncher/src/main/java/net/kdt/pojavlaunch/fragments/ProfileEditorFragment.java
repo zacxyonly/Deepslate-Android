@@ -132,7 +132,6 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
             mDownloadContentButton.setOnClickListener(v -> {
                 ProfileIconCache.dropIcon(mProfileKey);
                 save();
-                LauncherPreferences.DEFAULT_PREF.edit().putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, mProfileKey).apply();
                 Bundle bundle = new Bundle();
                 bundle.putString("profile_key", mProfileKey);
                 Tools.swapFragment(requireActivity(), SearchModFragment.class, SearchModFragment.TAG, bundle);
@@ -144,7 +143,6 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
             mManageContentButton.setOnClickListener(v -> {
                 ProfileIconCache.dropIcon(mProfileKey);
                 save();
-                LauncherPreferences.DEFAULT_PREF.edit().putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, mProfileKey).apply();
                 Bundle bundle = new Bundle();
                 bundle.putString("profile_key", mProfileKey);
                 Tools.swapFragment(requireActivity(), ContentManagerFragment.class, ContentManagerFragment.TAG, bundle);

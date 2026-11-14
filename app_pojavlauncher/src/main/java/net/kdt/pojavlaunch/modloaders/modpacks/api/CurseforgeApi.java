@@ -198,79 +198,12 @@ public class CurseforgeApi implements ModpackApi{
     }
 
     @Override
-    public ModLoader installMod(ModDetail modDetail, int selectedVersion) throws IOException{
+    public ModLoader installMod(ModDetail modDetail, int selectedVersion, @androidx.annotation.Nullable net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile targetProfile) throws IOException {
         if (modDetail.isModpack) {
             return ModpackInstaller.installModpack(modDetail, selectedVersion, this::installCurseforgeZip);
         }
-        installSingleContent(modDetail, selectedVersion);
+        ContentInstallUtils.installSingleContent(modDetail, selectedVersion, targetProfile);
         return null;
-    }
-
-    private void installSingleContent(ModDetail modDetail, int selectedVersion) throws IOException {
-        net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile currentProfile = net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles.getCurrentProfile();
-        File gameDir = Tools.getGameDirPath(currentProfile);
-
-        File targetDir;
-        String type = modDetail.projectType != null ? modDetail.projectType : SearchFilters.TYPE_MOD;
-        if (SearchFilters.TYPE_RESOURCEPACK.equals(type)) {
-            targetDir = new File(gameDir, "resourcepacks");
-        } else if (SearchFilters.TYPE_SHADER.equals(type)) {
-            targetDir = new File(gameDir, "shaderpacks");
-        } else {
-            targetDir = new File(gameDir, "mods");
-        }
-
-        if (!targetDir.exists()) {
-            targetDir.mkdirs();
-        }
-
-        String downloadUrl = (modDetail.versionUrls != null && selectedVersion < modDetail.versionUrls.length)
-                ? modDetail.versionUrls[selectedVersion] : null;
-        if (downloadUrl == null) {
-            throw new IOException("No download URL found for selected version.");
-        }
-
-        String fileName = null;
-        if (modDetail.fileNames != null && selectedVersion < modDetail.fileNames.length) {
-            fileName = modDetail.fileNames[selectedVersion];
-        }
-        if (fileName == null || fileName.isEmpty()) {
-            try {
-                fileName = Uri.parse(downloadUrl).getLastPathSegment();
-            } catch (Exception ignored) {}
-        }
-        if (fileName == null || fileName.isEmpty()) {
-            String ext = SearchFilters.TYPE_MOD.equals(type) ? ".jar" : ".zip";
-            fileName = modDetail.title.replaceAll("[^a-zA-Z0-9.-]", "_") + ext;
-        }
-
-        File targetFile = new File(targetDir, fileName);
-        byte[] downloadBuffer = new byte[8192];
-        ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.modpack_download_downloading_mods, 0.0f, 0.0f);
-
-        net.kdt.pojavlaunch.utils.DownloadUtils.downloadFileMonitored(downloadUrl, targetFile, downloadBuffer, (bytesRead, totalBytes) -> {
-            if (totalBytes > 0) {
-                int percent = (int) ((bytesRead * 100) / totalBytes);
-                float readMB = (float) bytesRead / (1024f * 1024f);
-                float totalMB = (float) totalBytes / (1024f * 1024f);
-                ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, percent, R.string.modpack_download_downloading_mods, readMB, totalMB);
-            }
-        });
-
-        ProgressLayout.clearProgress(ProgressLayout.INSTALL_MODPACK);
-
-        final String finalFileName = fileName;
-        net.kdt.pojavlaunch.lifecycle.ContextExecutor.execute(new net.kdt.pojavlaunch.lifecycle.ContextExecutorTask() {
-            @Override
-            public void executeWithActivity(Activity activity) {
-                android.widget.Toast.makeText(activity, "Installed: " + finalFileName, android.widget.Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void executeWithApplication(android.content.Context context) {
-                android.widget.Toast.makeText(context, "Installed: " + finalFileName, android.widget.Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     @Override

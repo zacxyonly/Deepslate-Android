@@ -54,12 +54,16 @@ public interface ModpackApi {
      * @param selectedVersion The selected version
      */
     default void handleInstallation(Context context, ModDetail modDetail, int selectedVersion) {
+        handleInstallation(context, modDetail, selectedVersion, null);
+    }
+
+    default void handleInstallation(Context context, ModDetail modDetail, int selectedVersion, @androidx.annotation.Nullable net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile targetProfile) {
         // Doing this here since when starting installation, the progress does not start immediately
         // which may lead to two concurrent installations (very bad)
         ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.global_waiting);
         PojavApplication.sExecutorService.execute(() -> {
             try {
-                ModLoader loaderInfo = installMod(modDetail, selectedVersion);
+                ModLoader loaderInfo = installMod(modDetail, selectedVersion, targetProfile);
                 if (loaderInfo == null) return;
                 loaderInfo.getDownloadTask(new NotificationDownloadListener(context, loaderInfo)).run();
             }catch (IOException e) {
@@ -75,7 +79,11 @@ public interface ModpackApi {
      * @param modDetail The mod detail data
      * @param selectedVersion The selected version
      */
-    ModLoader installMod(ModDetail modDetail, int selectedVersion) throws IOException;
+    default ModLoader installMod(ModDetail modDetail, int selectedVersion) throws IOException {
+        return installMod(modDetail, selectedVersion, null);
+    }
+
+    ModLoader installMod(ModDetail modDetail, int selectedVersion, @androidx.annotation.Nullable net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile targetProfile) throws IOException;
 
     /**
      * Imports the mod(pack) from a file.

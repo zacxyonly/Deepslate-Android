@@ -28,7 +28,7 @@
         android:resource="@xml/game_mode_config" />
     <application
         android:name=".PojavApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:allowNativeHeapPointerTagging="false"
         android:appCategory="game"
         android:hasFragileUserData="true"

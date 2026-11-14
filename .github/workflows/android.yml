@@ -102,6 +102,18 @@ jobs:
           ./scripts/languagelist_updater.sh
           mkdir -p out
 
+      - name: Setup Signing Keystore
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+        run: |
+          if [ -n "$RELEASE_KEYSTORE_BASE64" ]; then
+            echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > app_pojavlauncher/deepslate.keystore
+          elif [ ! -f app_pojavlauncher/deepslate.keystore ]; then
+            echo "No external release keystore secret found, generating build keystore..."
+            keytool -genkeypair -v -keystore app_pojavlauncher/deepslate.keystore -alias deepslate -keyalg RSA -keysize 2048 -validity 10000 -storepass "${RELEASE_KEYSTORE_PASSWORD:-deepslate}" -keypass "${RELEASE_KEYSTORE_PASSWORD:-deepslate}" -dname "CN=Deepslate, OU=Launcher, O=Deepslate, L=Jakarta, ST=DKI, C=ID"
+          fi
+
       - name: Build Release APK
         if: ${{ inputs.build_type == 'all' || inputs.build_type == 'release' }}
         env:

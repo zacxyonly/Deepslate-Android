@@ -35,11 +35,15 @@ import com.kdt.mcgui.MineButton;
 import net.kdt.pojavlaunch.PojavApplication;
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
+import net.kdt.pojavlaunch.extra.ExtraConstants;
+import net.kdt.pojavlaunch.extra.ExtraCore;
 import net.kdt.pojavlaunch.modloaders.modpacks.ContentMetadataUtils;
 import net.kdt.pojavlaunch.modloaders.modpacks.ManagedItemAdapter;
+import net.kdt.pojavlaunch.modloaders.modpacks.api.ContentInstallUtils;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.ManagedItem;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.SearchFilters;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
+import net.kdt.pojavlaunch.profiles.ProfileIconCache;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
@@ -47,9 +51,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ContentManagerFragment extends Fragment implements ManagedItemAdapter.ItemActionCallback {
     public static final String TAG = "ContentManagerFragment";
@@ -77,6 +83,7 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
     private final List<String> mProfileKeys = new ArrayList<>();
     private String mCurrentProfileKey;
     private MinecraftProfile mCurrentProfile;
+    private final AtomicInteger mLoadSequence = new AtomicInteger(0);
 
     private MineButton mBtnMods;
     private MineButton mBtnResourcePacks;
@@ -248,18 +255,21 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
         mProfileSpinner.setAdapter(spinnerAdapter);
 
         if (!mProfileKeys.isEmpty()) {
-            mProfileSpinner.setSelection(selectedIdx);
             mCurrentProfileKey = mProfileKeys.get(selectedIdx);
             mCurrentProfile = LauncherProfiles.mainProfileJson.profiles.get(mCurrentProfileKey);
+            mProfileSpinner.setSelection(selectedIdx);
         }
 
         mProfileSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position >= 0 && position < mProfileKeys.size()) {
-                    mCurrentProfileKey = mProfileKeys.get(position);
-                    mCurrentProfile = LauncherProfiles.mainProfileJson.profiles.get(mCurrentProfileKey);
-                    loadContent();
+                    String newKey = mProfileKeys.get(position);
+                    if (!newKey.equals(mCurrentProfileKey)) {
+                        mCurrentProfileKey = newKey;
+                        mCurrentProfile = LauncherProfiles.mainProfileJson.profiles.get(mCurrentProfileKey);
+                        loadContent();
+                    }
                 }
             }
 
@@ -303,6 +313,7 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
         if (mProgressBar != null) mProgressBar.setVisibility(View.VISIBLE);
         if (mEmptyContainer != null) mEmptyContainer.setVisibility(View.GONE);
 
+        final int currentSeq = mLoadSequence.incrementAndGet();
         final int targetCategory = mCurrentCategory;
         final MinecraftProfile targetProfile = mCurrentProfile;
         final String activeProfileKey = LauncherPreferences.DEFAULT_PREF.getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
@@ -343,6 +354,9 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
 
             if (getActivity() == null) return;
             getActivity().runOnUiThread(() -> {
+                // Ignore stale results from previous fast tab/profile switches
+                if (currentSeq != mLoadSequence.get()) return;
+
                 if (mProgressBar != null) mProgressBar.setVisibility(View.GONE);
                 mAdapter.setItems(items);
                 updateSummaryText();
@@ -364,7 +378,7 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
     private void updateSummaryText() {
         if (mSummaryText == null) return;
         if (mCurrentCategory == ManagedItem.TYPE_MODPACK) {
-            mSummaryText.setText(mAdapter.getAllCount() + " profil modpack");
+            mSummaryText.setText(getString(R.string.manager_summary_modpacks, mAdapter.getAllCount()));
         } else {
             mSummaryText.setText(getString(R.string.manager_status_summary, mAdapter.getAllCount(), mAdapter.getEnabledCount()));
         }
@@ -416,8 +430,9 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
                 }
             }
 
+            boolean success = true;
             if (!currentFile.equals(newFile)) {
-                boolean success = currentFile.renameTo(newFile);
+                success = currentFile.renameTo(newFile);
                 if (success) {
                     item.file = newFile;
                     item.fileName = newFile.getName();
@@ -425,8 +440,12 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
                 }
             }
 
+            final boolean renameOk = success;
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
+                    if (!renameOk) {
+                        Toast.makeText(requireContext(), R.string.manager_rename_failed, Toast.LENGTH_SHORT).show();
+                    }
                     mAdapter.notifyDataSetChanged();
                     updateSummaryText();
                 });
@@ -445,7 +464,19 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
                     .setTitle(R.string.manager_delete_confirm_title)
                     .setMessage(getString(R.string.manager_delete_confirm_msg, item.name))
                     .setPositiveButton(R.string.global_delete, (d, w) -> {
+                        String currentActiveKey = LauncherPreferences.DEFAULT_PREF.getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+                        boolean wasActive = item.profileKey != null && item.profileKey.equals(currentActiveKey);
+
+                        ProfileIconCache.dropIcon(item.profileKey);
                         LauncherProfiles.mainProfileJson.profiles.remove(item.profileKey);
+
+                        if (wasActive && !LauncherProfiles.mainProfileJson.profiles.isEmpty()) {
+                            String nextKey = LauncherProfiles.mainProfileJson.profiles.keySet().iterator().next();
+                            LauncherPreferences.DEFAULT_PREF.edit()
+                                    .putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, nextKey)
+                                    .apply();
+                            ExtraCore.setValue(ExtraConstants.REFRESH_VERSION_SPINNER, ProfileEditorFragment.DELETED_PROFILE);
+                        }
                         LauncherProfiles.write();
                         initProfiles();
                     })
@@ -481,6 +512,9 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
 
     private void openDownloadScreen() {
         Bundle bundle = new Bundle();
+        if (mCurrentProfileKey != null) {
+            bundle.putString("profile_key", mCurrentProfileKey);
+        }
         if (mCurrentCategory == ManagedItem.TYPE_MODPACK) {
             bundle.putBoolean("is_modpack", true);
         } else {
@@ -514,12 +548,13 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
             String lastImported = "";
 
             for (Uri uri : uris) {
-                String fileName = getFileNameFromUri(requireContext(), uri);
-                if (fileName == null || fileName.isEmpty()) {
-                    fileName = "imported_" + System.currentTimeMillis();
+                String rawName = getFileNameFromUri(requireContext(), uri);
+                String safeName = ContentInstallUtils.sanitizeFileName(rawName);
+                if (safeName.isEmpty()) {
+                    safeName = "imported_" + System.currentTimeMillis();
                 }
 
-                File destFile = new File(targetDir, fileName);
+                File destFile = getUniqueFile(targetDir, safeName);
                 try (InputStream is = requireContext().getContentResolver().openInputStream(uri);
                      OutputStream os = new FileOutputStream(destFile)) {
                     if (is != null) {
@@ -529,10 +564,13 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
                             os.write(buf, 0, len);
                         }
                         importedCount++;
-                        lastImported = fileName;
+                        lastImported = destFile.getName();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    if (destFile.exists()) {
+                        destFile.delete();
+                    }
                 }
             }
 
@@ -549,6 +587,26 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
                 });
             }
         });
+    }
+
+    private File getUniqueFile(File parentDir, String fileName) {
+        File file = new File(parentDir, fileName);
+        if (!file.exists()) return file;
+
+        String name = fileName;
+        String extension = "";
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex > 0) {
+            name = fileName.substring(0, dotIndex);
+            extension = fileName.substring(dotIndex);
+        }
+
+        int counter = 1;
+        while (file.exists()) {
+            file = new File(parentDir, name + " (" + counter + ")" + extension);
+            counter++;
+        }
+        return file;
     }
 
     private String getFileNameFromUri(Context context, Uri uri) {
@@ -570,6 +628,14 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
     }
 
     private void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory == null || !fileOrDirectory.exists()) return;
+        try {
+            if (Files.isSymbolicLink(fileOrDirectory.toPath())) {
+                fileOrDirectory.delete();
+                return;
+            }
+        } catch (Exception ignored) {}
+
         if (fileOrDirectory.isDirectory()) {
             File[] files = fileOrDirectory.listFiles();
             if (files != null) {

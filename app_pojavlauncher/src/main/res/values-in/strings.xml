@@ -473,4 +473,6 @@
     <string name="manager_import_success">Berhasil mengimpor: %1$s</string>
     <string name="manager_import_failed">Gagal mengimpor file.</string>
     <string name="manager_profile_cannot_delete_last">Tidak dapat menghapus satu-satunya profil yang tersisa.</string>
+    <string name="manager_summary_modpacks">%1$d profil modpack</string>
+    <string name="manager_rename_failed">Gagal mengubah status file.</string>
 </resources>

@@ -566,4 +566,6 @@
     <string name="manager_import_success">Imported successfully: %1$s</string>
     <string name="manager_import_failed">Failed to import file.</string>
     <string name="manager_profile_cannot_delete_last">Cannot delete the only remaining profile.</string>
+    <string name="manager_summary_modpacks">%1$d modpack profiles</string>
+    <string name="manager_rename_failed">Failed to change file status.</string>
 </resources>

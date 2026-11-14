@@ -63,6 +63,11 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private SearchResult mCurrentResult;
     private boolean mLastPage;
     private boolean mTasksRunning;
+    private net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile mTargetProfile;
+
+    public void setTargetProfile(net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile targetProfile) {
+        this.mTargetProfile = targetProfile;
+    }
 
 
     public ModItemAdapter(Resources resources, ModpackApi api, SearchResultCallback callback) {
@@ -182,7 +187,8 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     mExtendedButton.setOnClickListener(v1 -> mModpackApi.handleInstallation(
                             mExtendedButton.getContext().getApplicationContext(),
                             mModDetail,
-                            mExtendedSpinner.getSelectedItemPosition()));
+                            mExtendedSpinner.getSelectedItemPosition(),
+                            mTargetProfile));
                     mExtendedSpinner.setAdapter(mLoadingAdapter);
                 } else {
                     if(isExtended()) closeDetailedView();

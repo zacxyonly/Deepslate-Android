@@ -70,16 +70,23 @@ android {
 
     signingConfigs {
         customDebug {
-            storeFile file("deepslate.keystore")
-            storePassword "deepslate"
-            keyAlias "deepslate"
-            keyPassword "deepslate"
+            def debugStore = file("debug.keystore")
+            if (debugStore.exists()) {
+                storeFile debugStore
+                storePassword "android"
+                keyAlias "androiddebugkey"
+                keyPassword "android"
+            }
         }
         customRelease {
-            storeFile file("deepslate.keystore")
-            storePassword "deepslate"
-            keyAlias "deepslate"
-            keyPassword "deepslate"
+            def storePath = System.getenv("RELEASE_KEYSTORE_FILE") ?: "deepslate.keystore"
+            def releaseStore = file(storePath)
+            if (releaseStore.exists()) {
+                storeFile releaseStore
+                storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: "deepslate"
+                keyAlias System.getenv("RELEASE_KEY_ALIAS") ?: "deepslate"
+                keyPassword System.getenv("RELEASE_KEY_PASSWORD") ?: System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: "deepslate"
+            }
         }
         googlePlayBuild {
             storeFile file("upload.jks")
