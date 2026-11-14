@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_card"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_heavy">
+
+    <TextView
+        android:id="@+id/dialog_server_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/_15ssp"
+        android:textStyle="bold"
+        android:text="@string/server_manager_add" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_11ssp"
+        android:text="@string/server_name_hint" />
+
+    <EditText
+        android:id="@+id/dialog_server_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_tiny"
+        android:minHeight="@dimen/_36sdp"
+        android:background="@drawable/background_line"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:singleLine="true"
+        android:textColor="@color/primary_text"
+        android:textColorHint="@color/secondary_text"
+        android:textSize="@dimen/_12ssp"
+        android:hint="@string/server_name_hint" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_11ssp"
+        android:text="@string/server_ip_hint" />
+
+    <EditText
+        android:id="@+id/dialog_server_ip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_tiny"
+        android:minHeight="@dimen/_36sdp"
+        android:background="@drawable/background_line"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:singleLine="true"
+        android:textColor="@color/primary_text"
+        android:textColorHint="@color/secondary_text"
+        android:textSize="@dimen/_12ssp"
+        android:hint="@string/server_ip_hint" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_heavy"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <com.kdt.mcgui.MineButton
+            android:id="@+id/dialog_server_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/_32sdp"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_11ssp"
+            android:text="@android:string/cancel" />
+
+        <com.kdt.mcgui.MineButton
+            android:id="@+id/dialog_server_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_small"
+            android:minHeight="@dimen/_32sdp"
+            android:textColor="@color/minebutton_color"
+            android:textSize="@dimen/_11ssp"
+            android:text="@string/global_save" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -132,6 +132,8 @@ public final class Tools {
     public static String DIR_GAME_HOME = Environment.getExternalStorageDirectory().getAbsolutePath() + "/games/Deepslate";
     public static String DIR_GAME_NEW;
     public static String GAME_PROFILES_FILE;
+    public static String sDirectConnectServer = null;
+    public static int sDirectConnectPort = 0;
 
     // New since 3.0.0
     public static String DIRNAME_HOME_JRE = "lib";
@@ -849,6 +851,15 @@ public final class Tools {
                 versionInfo.minecraftArguments;
 
         if(profile.isDemo()) mcArguments += " --demo";
+
+        if (sDirectConnectServer != null && !sDirectConnectServer.trim().isEmpty()) {
+            mcArguments += " --server " + sDirectConnectServer.trim();
+            if (sDirectConnectPort > 0) {
+                mcArguments += " --port " + sDirectConnectPort;
+            }
+            sDirectConnectServer = null;
+            sDirectConnectPort = 0;
+        }
 
         return JSONUtils.insertJSONValueList(splitAndFilterEmpty(mcArguments), varArgMap);
     }

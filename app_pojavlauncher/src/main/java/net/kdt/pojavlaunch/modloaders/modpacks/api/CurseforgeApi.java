@@ -65,6 +65,10 @@ public class CurseforgeApi implements ModpackApi{
             classId = CURSEFORGE_MODPACK_CLASS_ID;
         } else if (SearchFilters.TYPE_RESOURCEPACK.equals(pType)) {
             classId = 12; // CurseForge Texture Packs
+        } else if (SearchFilters.TYPE_SHADER.equals(pType)) {
+            classId = 6552; // CurseForge Shaders
+        } else if (SearchFilters.TYPE_MAP.equals(pType)) {
+            classId = 17; // CurseForge Worlds / Saves
         }
         params.put("classId", classId);
         params.put("searchFilter", searchFilters.name != null ? searchFilters.name : "");

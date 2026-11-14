@@ -568,4 +568,22 @@
     <string name="manager_profile_cannot_delete_last">Cannot delete the only remaining profile.</string>
     <string name="manager_summary_modpacks">%1$d modpack profiles</string>
     <string name="manager_rename_failed">Failed to change file status.</string>
+    <string name="category_maps">MAPS / SAVES</string>
+    <string name="manager_empty_maps_title">No Maps Installed</string>
+    <string name="manager_empty_maps_desc">The saves folder for this profile is currently empty.</string>
+    <string name="manager_summary_maps">%1$d world saves</string>
+    <string name="manager_map_installed">World \'%1$s\' installed successfully!</string>
+    <string name="server_manager_title">SERVERS</string>
+    <string name="server_manager_add">ADD SERVER</string>
+    <string name="server_manager_edit">EDIT SERVER</string>
+    <string name="server_manager_delete">DELETE</string>
+    <string name="server_manager_direct_play">PLAY</string>
+    <string name="server_manager_empty">No servers saved yet. Tap + to add a multiplayer server!</string>
+    <string name="server_manager_summary">%1$d servers saved</string>
+    <string name="server_name_hint">Server Name (e.g. Hypixel)</string>
+    <string name="server_ip_hint">Server Address (e.g. mc.hypixel.net)</string>
+    <string name="server_status_pinging">Pinging...</string>
+    <string name="server_status_offline">Offline</string>
+    <string name="server_players_count">%1$d / %2$d players</string>
+    <string name="main_server_manager">SERVERS</string>
 </resources>

@@ -10,6 +10,7 @@ public class SearchFilters {
     public static final String TYPE_RESOURCEPACK = "resourcepack";
     public static final String TYPE_SHADER = "shader";
     public static final String TYPE_MODPACK = "modpack";
+    public static final String TYPE_MAP = "maps";
 
     public String projectType = TYPE_MOD;
     public boolean isModpack = false;

@@ -67,6 +67,7 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
     private MineButton mBtnMods;
     private MineButton mBtnResourcePacks;
     private MineButton mBtnShaders;
+    private MineButton mBtnMaps;
     private MineButton mBtnModpacks;
 
     private View mChipVersion;
@@ -137,6 +138,7 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         mBtnMods = view.findViewById(R.id.category_mods_button);
         mBtnResourcePacks = view.findViewById(R.id.category_resourcepacks_button);
         mBtnShaders = view.findViewById(R.id.category_shaders_button);
+        mBtnMaps = view.findViewById(R.id.category_maps_button);
         mBtnModpacks = view.findViewById(R.id.category_modpacks_button);
 
         mChipVersion = view.findViewById(R.id.search_mod_chip_version);
@@ -190,6 +192,9 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         mBtnMods.setOnClickListener(v -> selectCategory(SearchFilters.TYPE_MOD));
         mBtnResourcePacks.setOnClickListener(v -> selectCategory(SearchFilters.TYPE_RESOURCEPACK));
         mBtnShaders.setOnClickListener(v -> selectCategory(SearchFilters.TYPE_SHADER));
+        if (mBtnMaps != null) {
+            mBtnMaps.setOnClickListener(v -> selectCategory(SearchFilters.TYPE_MAP));
+        }
         mBtnModpacks.setOnClickListener(v -> selectCategory(SearchFilters.TYPE_MODPACK));
 
         mFilterButton.setOnClickListener(v -> displayFilterDialog());
@@ -203,6 +208,8 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
                     bundle.putInt("category", ManagedItem.TYPE_RESOURCEPACK);
                 } else if (SearchFilters.TYPE_SHADER.equals(mSearchFilters.projectType)) {
                     bundle.putInt("category", ManagedItem.TYPE_SHADER);
+                } else if (SearchFilters.TYPE_MAP.equals(mSearchFilters.projectType)) {
+                    bundle.putInt("category", ManagedItem.TYPE_MAP);
                 } else {
                     bundle.putInt("category", ManagedItem.TYPE_MOD);
                 }
@@ -375,6 +382,7 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         updateTabButton(mBtnMods, SearchFilters.TYPE_MOD.equals(currentType));
         updateTabButton(mBtnResourcePacks, SearchFilters.TYPE_RESOURCEPACK.equals(currentType));
         updateTabButton(mBtnShaders, SearchFilters.TYPE_SHADER.equals(currentType));
+        updateTabButton(mBtnMaps, SearchFilters.TYPE_MAP.equals(currentType));
         updateTabButton(mBtnModpacks, SearchFilters.TYPE_MODPACK.equals(currentType));
     }
 

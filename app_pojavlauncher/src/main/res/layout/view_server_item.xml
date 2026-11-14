@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_card"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingHorizontal="@dimen/padding_medium"
+    android:paddingVertical="@dimen/padding_medium"
+    android:layout_marginVertical="@dimen/padding_small">
+
+    <!-- Server Icon / Favicon -->
+    <ImageView
+        android:id="@+id/server_item_icon"
+        android:layout_width="@dimen/_44sdp"
+        android:layout_height="@dimen/_44sdp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_menu_custom_controls"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Server Name -->
+    <TextView
+        android:id="@+id/server_item_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/_13ssp"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/padding_moderate"
+        android:layout_marginEnd="@dimen/padding_small"
+        app:layout_constraintStart_toEndOf="@id/server_item_icon"
+        app:layout_constraintEnd_toStartOf="@id/server_item_ping"
+        app:layout_constraintTop_toTopOf="@id/server_item_icon"
+        tools:text="Hypixel Network" />
+
+    <!-- Ping indicator & ms -->
+    <TextView
+        android:id="@+id/server_item_ping"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_10ssp"
+        android:textStyle="bold"
+        android:textColor="@color/secondary_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/server_item_name"
+        app:layout_constraintBottom_toBottomOf="@id/server_item_name"
+        tools:text="● 42 ms" />
+
+    <!-- Server IP Address -->
+    <TextView
+        android:id="@+id/server_item_ip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_11ssp"
+        android:layout_marginTop="@dimen/_2sdp"
+        app:layout_constraintStart_toStartOf="@id/server_item_name"
+        app:layout_constraintEnd_toStartOf="@id/server_item_players"
+        app:layout_constraintTop_toBottomOf="@id/server_item_name"
+        tools:text="mc.hypixel.net" />
+
+    <!-- Players Count & Version -->
+    <TextView
+        android:id="@+id/server_item_players"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_10ssp"
+        android:textColor="@color/secondary_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/server_item_ip"
+        app:layout_constraintBottom_toBottomOf="@id/server_item_ip"
+        tools:text="14,235/100,000" />
+
+    <!-- Server MOTD -->
+    <TextView
+        android:id="@+id/server_item_motd"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_10ssp"
+        android:layout_marginTop="@dimen/_4sdp"
+        app:layout_constraintStart_toStartOf="@id/server_item_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/server_item_ip"
+        tools:text="The Hypixel Server Network\n[1.8 - 1.21] SkyBlock, BedWars and more!" />
+
+    <!-- Actions Container (Play, Edit, Delete) -->
+    <LinearLayout
+        android:id="@+id/server_item_actions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/padding_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/server_item_motd">
+
+        <com.kdt.mcgui.MineButton
+            android:id="@+id/server_item_btn_play"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="@dimen/_28sdp"
+            android:textSize="@dimen/_11ssp"
+            android:textColor="@color/minebutton_color"
+            android:text="@string/server_manager_direct_play" />
+
+        <ImageButton
+            android:id="@+id/server_item_btn_edit"
+            android:layout_width="@dimen/_32sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_marginStart="@dimen/padding_small"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_edit_profile"
+            app:tint="@color/primary_text"
+            android:contentDescription="@string/server_manager_edit" />
+
+        <ImageButton
+            android:id="@+id/server_item_btn_delete"
+            android:layout_width="@dimen/_32sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_marginStart="@dimen/padding_tiny"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_menu_delete_forever"
+            app:tint="@color/error_text"
+            android:contentDescription="@string/server_manager_delete" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

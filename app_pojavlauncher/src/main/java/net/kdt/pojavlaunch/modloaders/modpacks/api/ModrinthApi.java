@@ -59,6 +59,14 @@ public class ModrinthApi implements ModpackApi {
         String pType = searchFilters.projectType != null ? searchFilters.projectType
                 : (searchFilters.isModpack ? SearchFilters.TYPE_MODPACK : SearchFilters.TYPE_MOD);
 
+        if (SearchFilters.TYPE_MAP.equals(pType)) {
+            ModrinthSearchResult emptyResult = new ModrinthSearchResult();
+            emptyResult.results = new ModItem[0];
+            emptyResult.totalResultCount = 0;
+            emptyResult.previousOffset = 0;
+            return emptyResult;
+        }
+
         // Build the facets filters
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder facetString = new StringBuilder();

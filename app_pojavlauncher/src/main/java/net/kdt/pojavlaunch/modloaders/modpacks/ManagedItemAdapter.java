@@ -91,6 +91,10 @@ public class ManagedItemAdapter extends RecyclerView.Adapter<ManagedItemAdapter.
             String ver = item.version != null ? item.version : "-";
             holder.mMeta.setText(holder.itemView.getContext().getString(R.string.profiles_profile_version) + ": " + ver);
             holder.mDesc.setText(item.fileName != null ? item.fileName : "");
+        } else if (item.type == ManagedItem.TYPE_MAP) {
+            String sizeStr = ContentMetadataUtils.formatFileSize(item.fileSize);
+            holder.mMeta.setText(sizeStr + " • " + holder.itemView.getContext().getString(R.string.category_maps));
+            holder.mDesc.setText(item.description != null ? item.description : item.fileName);
         } else {
             String sizeStr = ContentMetadataUtils.formatFileSize(item.fileSize);
             String statusStr = item.isEnabled ?
@@ -116,6 +120,8 @@ public class ManagedItemAdapter extends RecyclerView.Adapter<ManagedItemAdapter.
                 holder.mIcon.setImageResource(R.drawable.ic_folder);
             } else if (item.type == ManagedItem.TYPE_SHADER) {
                 holder.mIcon.setImageResource(R.drawable.ic_setting_engine);
+            } else if (item.type == ManagedItem.TYPE_MAP) {
+                holder.mIcon.setImageResource(R.drawable.ic_folder);
             } else {
                 holder.mIcon.setImageResource(R.mipmap.ic_launcher);
             }
@@ -135,6 +141,10 @@ public class ManagedItemAdapter extends RecyclerView.Adapter<ManagedItemAdapter.
                     if (mCallback != null) mCallback.onAction(item);
                 });
             }
+            holder.itemView.setAlpha(1.0f);
+        } else if (item.type == ManagedItem.TYPE_MAP) {
+            holder.mSwitch.setVisibility(View.GONE);
+            holder.mBtnAction.setVisibility(View.GONE);
             holder.itemView.setAlpha(1.0f);
         } else {
             holder.mBtnAction.setVisibility(View.GONE);

@@ -13,6 +13,7 @@ public class ManagedItem {
     public static final int TYPE_RESOURCEPACK = 1;
     public static final int TYPE_SHADER = 2;
     public static final int TYPE_MODPACK = 3;
+    public static final int TYPE_MAP = 4;
 
     public int type;
     @Nullable public File file;

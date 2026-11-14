@@ -88,6 +88,7 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
     private MineButton mBtnMods;
     private MineButton mBtnResourcePacks;
     private MineButton mBtnShaders;
+    private MineButton mBtnMaps;
     private MineButton mBtnModpacks;
 
     private TextView mSummaryText;
@@ -129,6 +130,7 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
         mBtnMods = view.findViewById(R.id.category_mods_button);
         mBtnResourcePacks = view.findViewById(R.id.category_resourcepacks_button);
         mBtnShaders = view.findViewById(R.id.category_shaders_button);
+        mBtnMaps = view.findViewById(R.id.category_maps_button);
         mBtnModpacks = view.findViewById(R.id.category_modpacks_button);
 
         mSummaryText = view.findViewById(R.id.manager_summary_text);
@@ -177,6 +179,9 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
         mBtnMods.setOnClickListener(v -> selectCategory(ManagedItem.TYPE_MOD));
         mBtnResourcePacks.setOnClickListener(v -> selectCategory(ManagedItem.TYPE_RESOURCEPACK));
         mBtnShaders.setOnClickListener(v -> selectCategory(ManagedItem.TYPE_SHADER));
+        if (mBtnMaps != null) {
+            mBtnMaps.setOnClickListener(v -> selectCategory(ManagedItem.TYPE_MAP));
+        }
         mBtnModpacks.setOnClickListener(v -> selectCategory(ManagedItem.TYPE_MODPACK));
 
         mBtnDownload.setOnClickListener(v -> openDownloadScreen());
@@ -291,6 +296,7 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
         updateTabButton(mBtnMods, mCurrentCategory == ManagedItem.TYPE_MOD);
         updateTabButton(mBtnResourcePacks, mCurrentCategory == ManagedItem.TYPE_RESOURCEPACK);
         updateTabButton(mBtnShaders, mCurrentCategory == ManagedItem.TYPE_SHADER);
+        updateTabButton(mBtnMaps, mCurrentCategory == ManagedItem.TYPE_MAP);
         updateTabButton(mBtnModpacks, mCurrentCategory == ManagedItem.TYPE_MODPACK);
 
         if (mCurrentCategory == ManagedItem.TYPE_MODPACK) {
@@ -345,6 +351,10 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
                             if (nameLower.endsWith(".jar") || nameLower.endsWith(".jar.disabled")) {
                                 items.add(ContentMetadataUtils.parseItem(f, targetCategory));
                             }
+                        } else if (targetCategory == ManagedItem.TYPE_MAP) {
+                            if (f.isDirectory() || f.getName().toLowerCase().endsWith(".zip")) {
+                                items.add(ContentMetadataUtils.parseItem(f, targetCategory));
+                            }
                         } else {
                             items.add(ContentMetadataUtils.parseItem(f, targetCategory));
                         }
@@ -370,6 +380,8 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
             return new File(gameDir, "resourcepacks");
         } else if (category == ManagedItem.TYPE_SHADER) {
             return new File(gameDir, "shaderpacks");
+        } else if (category == ManagedItem.TYPE_MAP) {
+            return new File(gameDir, "saves");
         } else {
             return new File(gameDir, "mods");
         }
@@ -379,6 +391,8 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
         if (mSummaryText == null) return;
         if (mCurrentCategory == ManagedItem.TYPE_MODPACK) {
             mSummaryText.setText(getString(R.string.manager_summary_modpacks, mAdapter.getAllCount()));
+        } else if (mCurrentCategory == ManagedItem.TYPE_MAP) {
+            mSummaryText.setText(getString(R.string.manager_summary_maps, mAdapter.getAllCount()));
         } else {
             mSummaryText.setText(getString(R.string.manager_status_summary, mAdapter.getAllCount(), mAdapter.getEnabledCount()));
         }
@@ -399,6 +413,9 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
             } else if (mCurrentCategory == ManagedItem.TYPE_SHADER) {
                 mEmptyTitle.setText(R.string.manager_empty_shaders_title);
                 mEmptyDesc.setText(R.string.manager_empty_shaders_desc);
+            } else if (mCurrentCategory == ManagedItem.TYPE_MAP) {
+                mEmptyTitle.setText(R.string.manager_empty_maps_title);
+                mEmptyDesc.setText(R.string.manager_empty_maps_desc);
             } else {
                 mEmptyTitle.setText(R.string.manager_empty_modpacks_title);
                 mEmptyDesc.setText(R.string.manager_empty_modpacks_desc);
@@ -521,6 +538,7 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
             String typeStr = SearchFilters.TYPE_MOD;
             if (mCurrentCategory == ManagedItem.TYPE_RESOURCEPACK) typeStr = SearchFilters.TYPE_RESOURCEPACK;
             else if (mCurrentCategory == ManagedItem.TYPE_SHADER) typeStr = SearchFilters.TYPE_SHADER;
+            else if (mCurrentCategory == ManagedItem.TYPE_MAP) typeStr = SearchFilters.TYPE_MAP;
             bundle.putString("initial_type", typeStr);
         }
         Tools.swapFragment(requireActivity(), SearchModFragment.class, SearchModFragment.TAG, bundle);
@@ -563,8 +581,21 @@ public class ContentManagerFragment extends Fragment implements ManagedItemAdapt
                         while ((len = is.read(buf)) != -1) {
                             os.write(buf, 0, len);
                         }
-                        importedCount++;
-                        lastImported = destFile.getName();
+
+                        if (mCurrentCategory == ManagedItem.TYPE_MAP && safeName.toLowerCase().endsWith(".zip")) {
+                            try {
+                                String unpackedName = ContentInstallUtils.unpackSaveZip(destFile, targetDir, safeName);
+                                destFile.delete();
+                                importedCount++;
+                                lastImported = unpackedName;
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                destFile.delete();
+                            }
+                        } else {
+                            importedCount++;
+                            lastImported = destFile.getName();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

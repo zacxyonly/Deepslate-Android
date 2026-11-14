@@ -475,4 +475,22 @@
     <string name="manager_profile_cannot_delete_last">Tidak dapat menghapus satu-satunya profil yang tersisa.</string>
     <string name="manager_summary_modpacks">%1$d profil modpack</string>
     <string name="manager_rename_failed">Gagal mengubah status file.</string>
+    <string name="category_maps">PETA / SAVES</string>
+    <string name="manager_empty_maps_title">Belum Ada Peta Terpasang</string>
+    <string name="manager_empty_maps_desc">Folder saves untuk profil ini masih kosong.</string>
+    <string name="manager_summary_maps">%1$d peta dunia</string>
+    <string name="manager_map_installed">Dunia \'%1$s\' berhasil dipasang!</string>
+    <string name="server_manager_title">DAFTAR SERVER</string>
+    <string name="server_manager_add">TAMBAH SERVER</string>
+    <string name="server_manager_edit">EDIT SERVER</string>
+    <string name="server_manager_delete">HAPUS</string>
+    <string name="server_manager_direct_play">MAINKAN</string>
+    <string name="server_manager_empty">Belum ada server tersimpan. Ketuk tombol + untuk menambahkan server multiplayer!</string>
+    <string name="server_manager_summary">%1$d server tersimpan</string>
+    <string name="server_name_hint">Nama Server (contoh: Hypixel)</string>
+    <string name="server_ip_hint">Alamat Server (contoh: mc.hypixel.net)</string>
+    <string name="server_status_pinging">Memeriksa...</string>
+    <string name="server_status_offline">Offline</string>
+    <string name="server_players_count">%1$d / %2$d pemain</string>
+    <string name="main_server_manager">KELOLA SERVER</string>
 </resources>

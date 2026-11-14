@@ -154,6 +154,17 @@
                     android:text="@string/category_modpacks"
                     android:textSize="@dimen/_12ssp"
                     android:textColor="@color/primary_text"
+                    android:paddingHorizontal="@dimen/padding_medium"
+                    android:layout_marginEnd="@dimen/padding_small" />
+
+                <com.kdt.mcgui.MineButton
+                    android:id="@+id/category_maps_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/_32sdp"
+                    android:text="@string/category_maps"
+                    android:textSize="@dimen/_12ssp"
+                    android:textColor="@color/primary_text"
                     android:paddingHorizontal="@dimen/padding_medium" />
 
             </LinearLayout>

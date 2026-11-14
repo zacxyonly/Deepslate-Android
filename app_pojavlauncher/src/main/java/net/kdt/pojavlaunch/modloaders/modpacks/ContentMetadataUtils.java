@@ -59,6 +59,8 @@ public class ContentMetadataUtils {
                 parseResourcePackMetadata(file, item);
             } else if (type == ManagedItem.TYPE_SHADER) {
                 parseShaderMetadata(file, item);
+            } else if (type == ManagedItem.TYPE_MAP) {
+                parseMapMetadata(file, item);
             }
         } catch (Throwable ignored) {
             // Safe fallback to basic file info
@@ -295,5 +297,21 @@ public class ContentMetadataUtils {
             }
         }
         return length;
+    }
+
+    private static void parseMapMetadata(File file, ManagedItem item) {
+        item.isEnabled = true;
+        if (!file.isDirectory()) return;
+
+        File iconFile = new File(file, "icon.png");
+        if (iconFile.exists()) {
+            try {
+                Bitmap bitmap = BitmapFactory.decodeFile(iconFile.getAbsolutePath());
+                if (bitmap != null) {
+                    item.iconBitmap = bitmap;
+                }
+            } catch (Throwable ignored) {}
+        }
+        item.description = "Folder: " + file.getName();
     }
 }
